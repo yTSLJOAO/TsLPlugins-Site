@@ -39,7 +39,7 @@
 </head>
 <body class="bg-brand-bg min-h-screen flex flex-col bg-grid">
 
-  <!-- Header / Navbar -->
+  <!-- Navbar -->
   <header class="border-b border-brand-border bg-brand-bg/90 backdrop-blur sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
       <div class="flex items-center space-x-3 cursor-pointer" onclick="switchView('store')">
@@ -60,26 +60,21 @@
       </nav>
 
       <div class="flex items-center space-x-4">
-        <button onclick="toggleCart()" class="relative p-2.5 rounded-lg border border-brand-border bg-brand-card hover:border-brand-accent transition">
-          <i class="fa-solid fa-cart-shopping text-brand-accent"></i>
-          <span id="cart-count" class="absolute -top-2 -right-2 bg-brand-accent text-black font-bold text-xs w-5 h-5 rounded-full flex items-center justify-center">0</span>
-        </button>
-        <button onclick="openAdminLogin()" class="p-2.5 rounded-lg border border-brand-border bg-brand-card hover:border-brand-accent text-gray-400 hover:text-brand-accent transition">
-          <i class="fa-solid fa-gear"></i>
+        <button onclick="openAdminModal()" class="px-4 py-2 rounded-xl border border-brand-border bg-brand-card hover:border-brand-accent text-sm font-semibold text-gray-300 hover:text-brand-accent transition flex items-center gap-2">
+          <i class="fa-solid fa-gear"></i> Painel Admin
         </button>
       </div>
     </div>
   </header>
   <!-- View principal: LOJA -->
   <main id="view-store" class="flex-grow max-w-7xl mx-auto px-4 py-8 w-full">
-    <!-- Hero Banner -->
     <div class="relative rounded-2xl border border-brand-border bg-brand-card p-8 md:p-12 mb-12 overflow-hidden text-center md:text-left">
       <div class="relative z-10 max-w-2xl">
         <span class="inline-block px-3 py-1 bg-brand-accent/10 border border-brand-accent/30 text-brand-accent text-xs font-semibold rounded-full mb-4">
           <i class="fa-solid fa-bolt mr-1"></i> Alta Performance & Anti-Lag
         </span>
-        <h1 class="text-3xl md:text-5xl font-black mb-4 text-white leading-tight" id="hero-title">Eleve o Nível do Seu Servidor de Minecraft</h1>
-        <p class="text-gray-400 text-base md:text-lg mb-6" id="hero-desc">Plugins otimizados de alto desempenho com suporte dedicado, segurança avançada e atualizações constantes.</p>
+        <h1 class="text-3xl md:text-5xl font-black mb-4 text-white leading-tight">Eleve o Nível do Seu Servidor</h1>
+        <p class="text-gray-400 text-base md:text-lg mb-6">Plugins otimizados de alto desempenho com suporte dedicado e atualizações constantes.</p>
         <div class="flex flex-wrap gap-4 justify-center md:justify-start">
           <button onclick="switchView('docs')" class="px-6 py-3 bg-brand-card border border-brand-border hover:border-brand-accent rounded-xl font-semibold transition">
             Ver Documentação
@@ -88,7 +83,6 @@
       </div>
     </div>
 
-    <!-- Catálogo de Plugins -->
     <div class="flex justify-between items-center mb-8">
       <h2 class="text-2xl font-bold text-white">Catálogo de Plugins</h2>
       <input type="text" id="search-input" oninput="filterPlugins()" placeholder="Buscar plugin..." class="bg-brand-card border border-brand-border rounded-xl px-4 py-2 text-sm focus:border-brand-accent outline-none text-white w-64">
@@ -96,42 +90,19 @@
 
     <div id="plugin-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
   </main>
-  <!-- View: DOCUMENTAÇÃO (Estilo yStore) -->
+
+  <!-- View: DOCUMENTAÇÃO -->
   <main id="view-docs" class="hidden flex-grow max-w-7xl mx-auto px-4 py-8 w-full">
     <div class="flex flex-col md:flex-row gap-8 min-h-[600px]">
-      <aside class="w-full md:w-64 border-r border-brand-border pr-4 space-y-6">
-        <div>
-          <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Introdução</h3>
-          <ul class="space-y-1 text-sm">
-            <li><button onclick="loadDocContent('install')" class="w-full text-left px-3 py-2 rounded-lg bg-brand-card text-brand-accent font-medium">Instalação & Requisitos</button></li>
-            <li><button onclick="loadDocContent('license')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-brand-card text-gray-400 hover:text-white">Autenticação de Licença</button></li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Plugins</h3>
-          <ul class="space-y-1 text-sm" id="docs-plugin-list"></ul>
-        </div>
+      <aside class="w-full md:w-64 border-r border-brand-border pr-4 space-y-4">
+        <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Artigos da Documentação</h3>
+        <ul class="space-y-1 text-sm" id="docs-sidebar-list"></ul>
       </aside>
 
-      <section class="flex-1 bg-brand-card border border-brand-border rounded-2xl p-6 md:p-8" id="docs-content">
-        <h1 class="text-3xl font-black text-white mb-4">Instalação</h1>
-        <p class="text-gray-400 mb-6">Aprenda a instalar os plugins da TsLPlugins no seu servidor Minecraft.</p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <div class="border border-brand-border p-4 rounded-xl bg-brand-bg">
-            <i class="fa-solid fa-server text-brand-accent text-2xl mb-2"></i>
-            <h3 class="font-bold text-white">Bukkit / Paper</h3>
-            <p class="text-xs text-gray-400 mt-1">Compatível com versões 1.8 até 1.20+</p>
-          </div>
-          <div class="border border-brand-border p-4 rounded-xl bg-brand-bg">
-            <i class="fa-solid fa-network-wired text-brand-cyan text-2xl mb-2"></i>
-            <h3 class="font-bold text-white">BungeeCord</h3>
-            <p class="text-xs text-gray-400 mt-1">Suporte total a redes de servidores.</p>
-          </div>
-          <div class="border border-brand-border p-4 rounded-xl bg-brand-bg">
-            <i class="fa-solid fa-bolt text-green-400 text-2xl mb-2"></i>
-            <h3 class="font-bold text-white">Velocity</h3>
-            <p class="text-xs text-gray-400 mt-1">Alta performance em Proxies modernos.</p>
-          </div>
+      <section class="flex-1 bg-brand-card border border-brand-border rounded-2xl p-6 md:p-8" id="docs-content-area">
+        <h1 class="text-3xl font-black text-white mb-2" id="doc-title">Selecione uma documentação</h1>
+        <div class="text-gray-400 leading-relaxed space-y-4" id="doc-body">
+          Selecione um tópico na barra lateral para ler a documentação técnica.
         </div>
       </section>
     </div>
@@ -144,7 +115,7 @@
       <div class="space-y-4">
         <div class="p-4 bg-brand-bg border border-brand-border rounded-xl">
           <h3 class="font-bold text-white">Suas Licenças Ativas</h3>
-          <p class="text-sm text-gray-400 mt-1">Insira os IPs autorizados para utilizar os plugins nos seus servidores.</p>
+          <p class="text-sm text-gray-400 mt-1">Gerencie seus plugins adquiridos e IPs autorizados.</p>
         </div>
         <div id="client-licenses-list" class="space-y-3">
           <p class="text-sm text-gray-500">Nenhum plugin adquirido no momento.</p>
@@ -152,21 +123,89 @@
       </div>
     </div>
   </main>
-
-  <!-- Rodapé -->
-  <footer class="border-t border-brand-border bg-brand-bg py-8 mt-12">
-    <div class="max-w-7xl mx-auto px-4 text-center md:text-left text-sm text-gray-500 flex flex-col md:flex-row justify-between items-center gap-4">
-      <div>&copy; 2026 TsLPlugins. Todos os direitos reservados.</div>
-      <div class="flex space-x-6">
-        <button onclick="switchView('docs')" class="hover:text-brand-accent">Documentação</button>
-        <button onclick="openAdminLogin()" class="hover:text-brand-accent">Painel Admin</button>
+  <!-- Modal Painel Admin -->
+  <div id="admin-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-brand-card border border-brand-border rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden">
+      <!-- Topo Modal -->
+      <div class="p-6 border-b border-brand-border flex justify-between items-center">
+        <h3 class="text-xl font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-sliders text-brand-accent"></i> Painel Administrativo
+        </h3>
+        <button onclick="closeAdminModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
       </div>
+
+      <!-- Auth Tela se deslogado -->
+      <div id="admin-auth" class="p-8 space-y-4 max-w-md mx-auto w-full text-center">
+        <h4 class="text-lg font-bold text-white">Autenticação Requerida</h4>
+        <input type="password" id="admin-pass-input" placeholder="Digite a senha (padrão: 1234)" class="w-full bg-brand-bg border border-brand-border rounded-xl px-4 py-3 text-white focus:border-brand-accent outline-none">
+        <button onclick="loginAdmin()" class="w-full bg-brand-accent text-black font-bold py-3 rounded-xl hover:bg-brand-accentHover transition">Entrar</button>
+      </div>
+
+      <!-- Conteúdo do Admin se logado -->
+      <div id="admin-panel" class="hidden flex-1 flex flex-col md:flex-row overflow-hidden">
+        <!-- Sidebar Admin -->
+        <div class="w-full md:w-56 border-r border-brand-border p-4 space-y-2 bg-brand-bg">
+          <button onclick="switchAdminTab('plugins')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-sm text-white hover:bg-brand-card transition flex items-center gap-2"><i class="fa-solid fa-cube text-brand-accent"></i> Plugins</button>
+          <button onclick="switchAdminTab('docs')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-sm text-white hover:bg-brand-card transition flex items-center gap-2"><i class="fa-solid fa-book text-brand-cyan"></i> Documentação</button>
+          <button onclick="switchAdminTab('settings')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-sm text-white hover:bg-brand-card transition flex items-center gap-2"><i class="fa-solid fa-key text-amber-500"></i> Alterar Senha</button>
+        </div>
+
+        <!-- Corpos das Abas Admin -->
+        <div class="flex-1 p-6 overflow-y-auto custom-scroll">
+          <!-- Aba Admin: Plugins -->
+          <div id="admin-tab-plugins" class="space-y-6">
+            <h4 class="font-bold text-lg text-white">Gerenciar Plugins</h4>
+            <div class="bg-brand-bg border border-brand-border p-4 rounded-xl space-y-3">
+              <h5 class="text-sm font-bold text-brand-accent">Adicionar / Editar Plugin</h5>
+              <input type="hidden" id="p-id">
+              <input type="text" id="p-name" placeholder="Nome do Plugin" class="w-full bg-brand-card border border-brand-border rounded-lg p-2.5 text-sm text-white">
+              <input type="number" id="p-price" placeholder="Preço (Ex: 49.90)" class="w-full bg-brand-card border border-brand-border rounded-lg p-2.5 text-sm text-white">
+              <input type="text" id="p-desc" placeholder="Descrição Curta" class="w-full bg-brand-card border border-brand-border rounded-lg p-2.5 text-sm text-white">
+              <input type="text" id="p-cat" placeholder="Categoria (Ex: Sistemas, PvP)" class="w-full bg-brand-card border border-brand-border rounded-lg p-2.5 text-sm text-white">
+              <button onclick="savePlugin()" class="bg-brand-accent text-black font-bold px-4 py-2 rounded-lg text-sm">Salvar Plugin</button>
+            </div>
+            <div id="admin-plugin-list" class="space-y-2"></div>
+          </div>
+
+          <!-- Aba Admin: Documentação -->
+          <div id="admin-tab-docs" class="hidden space-y-6">
+            <h4 class="font-bold text-lg text-white">Gerenciar Documentação</h4>
+            <div class="bg-brand-bg border border-brand-border p-4 rounded-xl space-y-3">
+              <h5 class="text-sm font-bold text-brand-cyan">Adicionar / Editar Artigo</h5>
+              <input type="hidden" id="doc-id">
+              <input type="text" id="doc-input-title" placeholder="Título do Artigo (Ex: Instalação Bukkit)" class="w-full bg-brand-card border border-brand-border rounded-lg p-2.5 text-sm text-white">
+              <textarea id="doc-input-content" rows="5" placeholder="Conteúdo do Artigo (Aceita marcações simples de texto)..." class="w-full bg-brand-card border border-brand-border rounded-lg p-2.5 text-sm text-white"></textarea>
+              <button onclick="saveDoc()" class="bg-brand-cyan text-black font-bold px-4 py-2 rounded-lg text-sm">Salvar Documentação</button>
+            </div>
+            <div id="admin-doc-list" class="space-y-2"></div>
+          </div>
+
+          <!-- Aba Admin: Senha -->
+          <div id="admin-tab-settings" class="hidden space-y-4">
+            <h4 class="font-bold text-lg text-white">Alterar Senha do Admin</h4>
+            <input type="password" id="new-admin-pass" placeholder="Digite a nova senha" class="w-full bg-brand-bg border border-brand-border rounded-xl p-3 text-sm text-white">
+            <button onclick="changeAdminPass()" class="bg-brand-accent text-black font-bold px-6 py-2.5 rounded-xl text-sm">Atualizar Senha</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="border-t border-brand-border bg-brand-bg py-8 mt-12">
+    <div class="max-w-7xl mx-auto px-4 text-center text-sm text-gray-500">
+      &copy; 2026 TsLPlugins - Loja Profissional de Plugins para Minecraft.
     </div>
   </footer>
   <script>
+    // Estado dos Dados com Persistência Local
     let plugins = JSON.parse(localStorage.getItem('tsl_plugins')) || [
-      { id: '1', name: 'TsL-Rankup', price: 49.90, desc: 'Sistema completo de Rankup com minas dinâmicas.', category: 'Sistemas', version: '2.1.0' },
-      { id: '2', name: 'TsL-Factions', price: 79.90, desc: 'Factions com guerras, terrenos e proteção anti-bug.', category: 'PvP', version: '1.0.4' }
+      { id: '1', name: 'TsL-Rankup', price: 49.90, desc: 'Sistema completo de Rankup com minas dinâmicas.', category: 'Sistemas' },
+      { id: '2', name: 'TsL-Factions', price: 79.90, desc: 'Factions com guerras, terrenos e proteção anti-bug.', category: 'PvP' }
+    ];
+
+    let docs = JSON.parse(localStorage.getItem('tsl_docs')) || [
+      { id: '1', title: 'Instalação Geral', content: 'Para instalar nossos plugins, basta colocar o arquivo .jar na pasta /plugins do seu servidor e reiniciar.' },
+      { id: '2', title: 'Autenticação de Licença', content: 'As licenças são ativadas automaticamente com base no IP cadastrado no Painel do Cliente.' }
     ];
 
     function switchView(view) {
@@ -174,33 +213,184 @@
       document.getElementById('view-docs').classList.add('hidden');
       document.getElementById('view-client').classList.add('hidden');
       document.getElementById('view-' + view).classList.remove('hidden');
+      if (view === 'docs') renderDocs();
     }
 
     function renderPlugins() {
       const grid = document.getElementById('plugin-grid');
       grid.innerHTML = plugins.map(p => `
-        <div class="bg-brand-card border border-brand-border rounded-2xl p-6 hover:border-brand-accent transition">
-          <span class="text-xs bg-brand-accent/10 border border-brand-accent/30 text-brand-accent px-2.5 py-1 rounded-full font-bold">${p.category}</span>
-          <h3 class="text-xl font-bold text-white mt-3">${p.name}</h3>
-          <p class="text-gray-400 text-sm mt-2 mb-4">${p.desc}</p>
+        <div class="bg-brand-card border border-brand-border rounded-2xl p-6 hover:border-brand-accent transition flex flex-col justify-between">
+          <div>
+            <span class="text-xs bg-brand-accent/10 border border-brand-accent/30 text-brand-accent px-2.5 py-1 rounded-full font-bold">${p.category}</span>
+            <h3 class="text-xl font-bold text-white mt-3">${p.name}</h3>
+            <p class="text-gray-400 text-sm mt-2 mb-4">${p.desc}</p>
+          </div>
           <div class="flex justify-between items-center pt-4 border-t border-brand-border">
-            <span class="font-mono text-lg font-bold text-brand-accent">R$ ${p.price.toFixed(2)}</span>
+            <span class="font-mono text-lg font-bold text-brand-accent">R$ ${parseFloat(p.price).toFixed(2)}</span>
             <button class="bg-brand-accent text-black font-bold px-4 py-2 rounded-xl text-sm hover:bg-brand-accentHover transition">Comprar</button>
           </div>
         </div>
       `).join('');
     }
 
-    function openAdminLogin() {
-      const pass = prompt("Digite a senha do Painel Admin:");
-      if (pass === (localStorage.getItem('tsl_admin_pass') || '1234')) {
-        alert("Acesso Autorizado!");
-      } else if (pass) {
-        alert("Senha incorreta!");
+    function renderDocs() {
+      const sidebar = document.getElementById('docs-sidebar-list');
+      sidebar.innerHTML = docs.map((d, index) => `
+        <li>
+          <button onclick="showDoc('${d.id}')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-brand-card text-gray-300 hover:text-white transition font-medium">
+            ${d.title}
+          </button>
+        </li>
+      `).join('');
+      if (docs.length > 0) showDoc(docs[0].id);
+    }
+
+    function showDoc(id) {
+      const doc = docs.find(d => d.id === id);
+      if (doc) {
+        document.getElementById('doc-title').innerText = doc.title;
+        document.getElementById('doc-body').innerText = doc.content;
       }
     }
 
+    // Modal Admin
+    function openAdminModal() {
+      document.getElementById('admin-modal').classList.remove('hidden');
+    }
+    function closeAdminModal() {
+      document.getElementById('admin-modal').classList.add('hidden');
+    }
+
+    function loginAdmin() {
+      const pass = document.getElementById('admin-pass-input').value;
+      const savedPass = localStorage.getItem('tsl_admin_pass') || '1234';
+      if (pass === savedPass) {
+        document.getElementById('admin-auth').classList.add('hidden');
+        document.getElementById('admin-panel').classList.remove('hidden');
+        renderAdminLists();
+      } else {
+        alert('Senha incorreta!');
+      }
+    }
+
+    function switchAdminTab(tab) {
+      document.getElementById('admin-tab-plugins').classList.add('hidden');
+      document.getElementById('admin-tab-docs').classList.add('hidden');
+      document.getElementById('admin-tab-settings').classList.add('hidden');
+      document.getElementById('admin-tab-' + tab).classList.remove('hidden');
+    }
+
+    // CRUD Plugins Admin
+    function savePlugin() {
+      const id = document.getElementById('p-id').value || Date.now().toString();
+      const name = document.getElementById('p-name').value;
+      const price = parseFloat(document.getElementById('p-price').value) || 0;
+      const desc = document.getElementById('p-desc').value;
+      const category = document.getElementById('p-cat').value || 'Geral';
+
+      if (!name) return alert('Informe o nome!');
+
+      const idx = plugins.findIndex(p => p.id === id);
+      if (idx >= 0) plugins[idx] = { id, name, price, desc, category };
+      else plugins.push({ id, name, price, desc, category });
+
+      localStorage.setItem('tsl_plugins', JSON.stringify(plugins));
+      renderPlugins();
+      renderAdminLists();
+      clearPluginForm();
+    }
+
+    function deletePlugin(id) {
+      plugins = plugins.filter(p => p.id !== id);
+      localStorage.setItem('tsl_plugins', JSON.stringify(plugins));
+      renderPlugins();
+      renderAdminLists();
+    }
+
+    function editPlugin(id) {
+      const p = plugins.find(x => x.id === id);
+      if (p) {
+        document.getElementById('p-id').value = p.id;
+        document.getElementById('p-name').value = p.name;
+        document.getElementById('p-price').value = p.price;
+        document.getElementById('p-desc').value = p.desc;
+        document.getElementById('p-cat').value = p.category;
+      }
+    }
+
+    function clearPluginForm() {
+      document.getElementById('p-id').value = '';
+      document.getElementById('p-name').value = '';
+      document.getElementById('p-price').value = '';
+      document.getElementById('p-desc').value = '';
+      document.getElementById('p-cat').value = '';
+    }
+
+    // CRUD Docs Admin
+    function saveDoc() {
+      const id = document.getElementById('doc-id').value || Date.now().toString();
+      const title = document.getElementById('doc-input-title').value;
+      const content = document.getElementById('doc-input-content').value;
+
+      if (!title) return alert('Informe o título!');
+
+      const idx = docs.findIndex(d => d.id === id);
+      if (idx >= 0) docs[idx] = { id, title, content };
+      else docs.push({ id, title, content });
+
+      localStorage.setItem('tsl_docs', JSON.stringify(docs));
+      renderDocs();
+      renderAdminLists();
+      clearDocForm();
+    }
+
+    function deleteDoc(id) {
+      docs = docs.filter(d => d.id !== id);
+      localStorage.setItem('tsl_docs', JSON.stringify(docs));
+      renderDocs();
+      renderAdminLists();
+    }
+
+    function editDoc(id) {
+      const d = docs.find(x => x.id === id);
+      if (d) {
+        document.getElementById('doc-id').value = d.id;
+        document.getElementById('doc-input-title').value = d.title;
+        document.getElementById('doc-input-content').value = d.content;
+      }
+    }
+
+    function clearDocForm() {
+      document.getElementById('doc-id').value = '';
+      document.getElementById('doc-input-title').value = '';
+      document.getElementById('doc-input-content').value = '';
+    }
+
+    function changeAdminPass() {
+      const newPass = document.getElementById('new-admin-pass').value;
+      if (!newPass) return alert('Digite a nova senha!');
+      localStorage.setItem('tsl_admin_pass', newPass);
+      alert('Senha alterada com sucesso!');
+      document.getElementById('new-admin-pass').value = '';
+    }
+
+    function renderAdminLists() {
+      // Lista de Plugins Admin
+      document.getElementById('admin-plugin-list').innerHTML = plugins.map(p => `
+        <div class="flex justify-between items-center bg-brand-card p-3 rounded-xl text-sm border border-brand-border">
+          <div><strong class="text-white">${p.name}</strong> - <span class="text-brand-accent">R$ ${p.price.toFixed(2)}</span></div>
+          <div class="space-x-2">
+          
+            <button onclick="editDoc('${d.id}')" class="text-blue-400 hover:text-blue-300"><i class="fa-solid fa-pen"></i></button>
+            <button onclick="deleteDoc('${d.id}')" class="text-red-400 hover:text-red-300"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Inicialização
     renderPlugins();
+    renderDocs();
   </script>
 </body>
 </html>
