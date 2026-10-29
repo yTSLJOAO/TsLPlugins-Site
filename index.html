@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TsLPlugins - A Loja #1 de Plugins para Minecraft</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            bg: '#0b0e14',
+                            surface: '#121721',
+                            card: '#181e2b',
+                            border: '#242d3e',
+                            hover: '#2e394e',
+                            gold: '#f59e0b',
+                            goldHover: '#d97706',
+                            goldGlow: 'rgba(245, 158, 11, 0.15)',
+                            emerald: '#10b981',
+                            cyan: '#06b6d4',
+                            muted: '#94a3b8'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    boxShadow: {
+                        'glow-gold': '0 0 25px -5px rgba(245, 158, 11, 0.3)',
+                        'glow-cyan': '0 0 20px -5px rgba(6, 182, 212, 0.3)',
+                        'card-depth': '0 10px 30px -10px rgba(0,0,0,0.5)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0b0e14;
+            color: #f1f5f9;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Efeito de grade sutil para estética de servidor/gaming */
+        .grid-bg {
+            background-image: radial-gradient(rgba(245, 158, 11, 0.08) 1px, transparent 0);
+            background-size: 32px 32px;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0e14;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #242d3e;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f59e0b;
+        }
+
+        /* Animações sutis */
+        .toast-enter {
+            transform: translateY(100%) scale(0.9);
+            opacity: 0;
+        }
+        .toast-show {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="grid-bg min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-black">
+
+    <!-- TOP ANNOUNCEMENT BAR -->
+    <div class="bg-gradient-to-r from-amber-600/20 via-amber-500/20 to-amber-600/20 border-b border-amber-500/30 text-amber-300 text-xs sm:text-sm py-2 px-4 text-center font-medium flex items-center justify-center gap-2">
+        <span class="inline-block w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+        <span>🎉 cupom <strong>TSL10</strong> para 10% OFF no seu primeiro pedido!</span>
+    </div>
+
+    <!-- HEADER / NAVBAR -->
+    <header class="sticky top-0 z-40 bg-brand-bg/80 backdrop-blur-md border-b border-brand-border/60 transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- LOGO -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-glow-gold group-hover:scale-105 transition-transform duration-300">
+                    <i data-lucide="terminal" class="w-6 h-6 text-slate-950 stroke-[2.5]"></i>
+                </div>
+                <div>
+                    <span class="text-xl font-black tracking-wider text-white">TsL<span class="text-brand-gold">Plugins</span></span>
+                    <span class="block text-[10px] font-mono text-brand-muted tracking-widest uppercase -mt-1">Core & Systems</span>
+                </div>
+            </a>
+
+            <!-- NAVIGATION (DESKTOP) -->
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+                <a href="#hero" class="hover:text-brand-gold transition-colors">Início</a>
+                <a href="#plugins" class="hover:text-brand-gold transition-colors">Plugins</a>
+                <a href="#recursos" class="hover:text-brand-gold transition-colors">Diferenciais</a>
+                <a href="#depoimentos" class="hover:text-brand-gold transition-colors">Depoimentos</a>
+                <a href="#faq" class="hover:text-brand-gold transition-colors">FAQ</a>
+                <a href="https://discord.gg" target="_blank" class="flex items-center gap-1.5 text-indigo-400 hover:text-indigo-300 transition-colors">
+                    <i data-lucide="disc" class="w-4 h-4"></i> Discord
+                </a>
+            </nav>
+
+            <!-- ACTION BUTTONS -->
+            <div class="flex items-center gap-4">
+                <!-- CARRINHO BUTTON -->
+                <button id="cartBtn" onclick="toggleCart()" class="relative p-2.5 rounded-xl bg-brand-surface border border-brand-border text-slate-200 hover:border-brand-gold hover:text-brand-gold transition-all">
+                    <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                    <span id="cartCount" class="absolute -top-1.5 -right-1.5 bg-brand-gold text-slate-950 text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center scale-0 transition-transform">0</span>
+                </button>
+
+                <!-- MINHA CONTA -->
+                <button onclick="showToast('Sistema de Autenticação Spigot/Discord em breve!')" class="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border hover:border-slate-500 text-sm font-semibold text-slate-200 hover:text-white transition-all">
+                    <i data-lucide="user" class="w-4 h-4 text-brand-gold"></i> Minha Conta
+                </button>
+
+                <!-- MOBILE MENU TOGGLE -->
+                <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg bg-brand-surface border border-brand-border text-slate-300">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- MOBILE MENU -->
+        <div id="mobileMenu" class="hidden md:hidden bg-brand-surface border-b border-brand-border px-4 py-4 space-y-3">
+            <a href="#hero" onclick="toggleMobileMenu()" class="block text-slate-300 hover:text-brand-gold py-1">Início</a>
+            <a href="#plugins" onclick="toggleMobileMenu()" class="block text-slate-300 hover:text-brand-gold py-1">Plugins</a>
+            <a href="#recursos" onclick="toggleMobileMenu()" class="block text-slate-300 hover:text-brand-gold py-1">Diferenciais</a>
+            <a href="#depoimentos" onclick="toggleMobileMenu()" class="block text-slate-300 hover:text-brand-gold py-1">Depoimentos</a>
+            <a href="#faq" onclick="toggleMobileMenu()" class="block text-slate-300 hover:text-brand-gold py-1">FAQ</a>
+            <a href="https://discord.gg" target="_blank" class="flex items-center gap-2 text-indigo-400 py-1">
+                <i data-lucide="disc" class="w-4 h-4"></i> Discord
+            </a>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section id="hero" class="relative pt-12 pb-20 md:pt-20 md:pb-32 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center max-w-3xl mx-auto">
+                
+                <!-- BADGE -->
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-surface border border-brand-border text-xs font-mono text-brand-gold mb-6">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                    SUPORTE COMPATÍVEL COM SPIGOT / PAPER 1.8 - 1.20+
+                </div>
+
+                <!-- TITLE -->
+                <h1 class="text-4xl sm:text-6xl font-black text-white tracking-tight leading-tight">
+                    Sistemas Robustos para a <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500">Nova Era</span> do seu Servidor.
+                </h1>
+
+                <!-- SUBTITLE -->
+                <p class="mt-6 text-lg sm:text-xl text-brand-muted font-normal leading-relaxed">
+                    Plugins de alta performance focados em 0% de lag, execução assíncrona e arquitetura limpa. Leve a experiência do seu servidor Minecraft ao topo do mercado.
+                </p>
+
+                <!-- CTA BUTTONS -->
+                <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a href="#plugins" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-base shadow-glow-gold hover:scale-105 transition-all flex items-center justify-center gap-2">
+                        <i data-lucide="sparkles" class="w-5 h-5"></i> Explorar Plugins
+                    </a>
+                    <a href="https://discord.gg" target="_blank" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-brand-surface border border-brand-border hover:border-indigo-500 text-slate-200 hover:text-white font-semibold text-base transition-all flex items-center justify-center gap-2">
+                        <i data-lucide="disc" class="w-5 h-5 text-indigo-400"></i> Comunidade no Discord
+                    </a>
+                </div>
+
+                <!-- STATS BAR -->
+                <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 p-6 rounded-2xl bg-brand-surface/60 border border-brand-border/80 backdrop-blur">
+                    <div class="p-2">
+                        <div class="text-2xl sm:text-3xl font-black text-white font-mono">+50.000</div>
+                        <div class="text-xs text-brand-muted uppercase font-semibold mt-1">Downloads Realizados</div>
+                    </div>
+                    <div class="p-2">
+                        <div class="text-2xl sm:text-3xl font-black text-brand-gold font-mono">99.9%</div>
+                        <div class="text-xs text-brand-muted uppercase font-semibold mt-1">SLA Uptime & Zero Lag</div>
+                    </div>
+                    <div class="p-2">
+                        <div class="text-2xl sm:text-3xl font-black text-white font-mono">+600</div>
+                        <div class="text-xs text-brand-muted uppercase font-semibold mt-1">Servidores Atendidos</div>
+                    </div>
+                    <div class="p-2">
+                        <div class="text-2xl sm:text-3xl font-black text-emerald-400 font-mono">4.9/5★</div>
+                        <div class="text-xs text-brand-muted uppercase font-semibold mt-1">Avaliação Média</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN CATALOG & FILTER SECTION -->
+    <section id="plugins" class="py-16 bg-brand-bg relative border-t border-brand-border/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+                <div>
+                    <span class="text-brand-gold font-mono text-sm font-semibold tracking-wider uppercase">Catálogo Premium</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-1">Plugins Disponíveis</h2>
+                </div>
+
+                <!-- SEARCH BAR -->
+                <div class="relative w-full md:w-80">
+                    <i data-lucide="search" class="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-muted"></i>
+                    <input type="text" id="searchInput" onkeyup="filterPlugins()" placeholder="Buscar plugin (ex: Economia)..." class="w-full bg-brand-surface border border-brand-border rounded-xl pl-11 pr-4 py-2.5 text-sm text-white placeholder-brand-muted focus:outline-none focus:border-brand-gold transition-all">
+                </div>
+            </div>
+
+            <!-- CATEGORY FILTERS -->
+            <div class="flex flex-wrap gap-2 mb-8">
+                <button onclick="setCategory('all')" class="cat-btn active px-4 py-2 rounded-xl text-sm font-semibold bg-brand-gold text-slate-950 transition-all" data-cat="all">Todos</button>
+                <button onclick="setCategory('economia')" class="cat-btn px-4 py-2 rounded-xl text-sm font-semibold bg-brand-surface border border-brand-border text-brand-muted hover:text-white transition-all" data-cat="economia">Economia</button>
+                <button onclick="setCategory('facções')" class="cat-btn px-4 py-2 rounded-xl text-sm font-semibold bg-brand-surface border border-brand-border text-brand-muted hover:text-white transition-all" data-cat="facções">Facções & Rankup</button>
+                <button onclick="setCategory('segurança')" class="cat-btn px-4 py-2 rounded-xl text-sm font-semibold bg-brand-surface border border-brand-border text-brand-muted hover:text-white transition-all" data-cat="segurança">Segurança</button>
+                <button onclick="setCategory('utilitários')" class="cat-btn px-4 py-2 rounded-xl text-sm font-semibold bg-brand-surface border border-brand-border text-brand-muted hover:text-white transition-all" data-cat="utilitários">Utilitários</button>
+            </div>
+
+            <!-- PLUGINS GRID -->
+            <div id="pluginsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Cards renderizados via JS -->
+            </div>
+
+        </div>
+    </section>
+
+    <!-- RECURSOS / DIFERENCIAIS -->
+    <section id="recursos" class="py-20 bg-brand-surface/40 border-t border-brand-border/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-brand-gold font-mono text-sm font-semibold uppercase">Qualidade Incomparável</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">Por que escolher a TsLPlugins?</h2>
+                <p class="text-brand-muted mt-3">Desenvolvemos com o padrão de engenharia mais rigoroso da comunidade para garantir estabilidade absoluta.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="p-6 rounded-2xl bg-brand-card border border-brand-border hover:border-brand-gold/50 transition-all group">
+                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 text-brand-gold flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                        <i data-lucide="zap" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Execução 100% Async</h3>
+                    <p class="text-brand-muted text-sm leading-relaxed">
+                        Nossas consultas a banco de dados (MySQL, SQLite e Redis) e cálculos pesados ocorrem totalmente fora da Main Thread do Spigot. TPS intacto em 20.0.
+                    </p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="p-6 rounded-2xl bg-brand-card border border-brand-border hover:border-cyan-500/50 transition-all group">
+                    <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                        <i data-lucide="shield-check" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Proteção & Licenciamento</h3>
+                    <p class="text-brand-muted text-sm leading-relaxed">
+                        Sistema próprio de autenticação com DRM leve, sem impacto de performance e blindado contra explorações e dupes conhecidos.
+                    </p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="p-6 rounded-2xl bg-brand-card border border-brand-border hover:border-emerald-500/50 transition-all group">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+                        <i data-lucide="headphones" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">Suporte Prioritário 24/7</h3>
+                    <p class="text-brand-muted text-sm leading-relaxed">
+                        Equipe especializada em Java e administração de servidores de alta liquidez pronta para auxiliar em configurações e dúvidas.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DEPOIMENTOS -->
+    <section id="depoimentos" class="py-20 bg-brand-bg border-t border-brand-border/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-brand-gold font-mono text-sm font-semibold uppercase">Prova Social</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">Quem utiliza recomenda</h2>
+                <p class="text-brand-muted mt-2">Veja a opinião de donos de redes e gestores de servidores.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Depoimento 1 -->
+                <div class="p-6 rounded-2xl bg-brand-surface border border-brand-border flex flex-col justify-between">
+                    <p class="text-slate-300 text-sm italic mb-6">
+                        "Substituímos todo o sistema de economia antigo pelo TsL-Economy na nossa rede com 350+ players simultâneos. O TPS estabilizou em 20.0 imediatamente. Vale cada centavo!"
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-slate-800 border border-amber-500/30 flex items-center justify-center text-brand-gold font-bold font-mono">
+                            RK
+                        </div>
+                        <div>
+                            <div class="text-sm font-bold text-white">Raikou_</div>
+                            <div class="text-xs text-brand-muted">Fundador da Rede Legacy</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Depoimento 2 -->
+                <div class="p-6 rounded-2xl bg-brand-surface border border-brand-border flex flex-col justify-between">
+                    <p class="text-slate-300 text-sm italic mb-6">
+                        "O TsL-AntiCheat foi o único que realmente barrou os clientes de hack customizados no nosso servidor de Facções. O suporte no Discord responde em questão de minutos!"
+                    </p>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-slate-800 border border-cyan-500/30 flex items-center justify-center text-cyan-400 font-bold font-mono">
