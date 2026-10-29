@@ -1,1376 +1,206 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark scroll-smooth">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle">TsLPlugins - A Loja #1 de Plugins para Minecraft</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
-    <script>
-        function getInitialTheme() {
-            try {
-                const saved = localStorage.getItem('tsl_app_state');
-                if (saved) {
-                    const parsed = JSON.parse(saved);
-                    if (parsed && parsed.settings && parsed.settings.brandColor) {
-                        return parsed.settings.brandColor;
-                    }
-                }
-            } catch(e) {}
-            return '#f59e0b';
-        }
-
-        const dynamicColor = getInitialTheme();
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    },
-                    colors: {
-                        brand: {
-                            bg: '#0b0e14',
-                            surface: '#121721',
-                            card: '#181f2c',
-                            border: '#242d3e',
-                            gold: dynamicColor,
-                            goldHover: '#d97706',
-                            muted: '#94a3b8'
-                        }
-                    },
-                    boxShadow: {
-                        'glow-gold': `0 0 20px -3px ${dynamicColor}40`,
-                        'card-depth': '0 10px 30px -10px rgba(0,0,0,0.5)'
-                    }
-                }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TsLPlugins - A Melhor Loja de Plugins</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              bg: '#0b0e14',
+              card: '#131822',
+              border: '#1f293d',
+              accent: '#f59e0b',
+              accentHover: '#d97706',
+              cyan: '#06b6d4'
             }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
         }
-    </script>
-    <style>
-        body {
-            background-color: #0b0e14;
-            color: #f1f5f9;
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
-        }
-
-        .grid-bg {
-            background-image: radial-gradient(rgba(245, 158, 11, 0.08) 1px, transparent 0);
-            background-size: 32px 32px;
-        }
-
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0b0e14;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #242d3e;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--brand-color, #f59e0b);
-        }
-
-        .toast-enter {
-            transform: translateY(100%) scale(0.9);
-            opacity: 0;
-        }
-        .toast-show {
-            transform: translateY(0) scale(1);
-            opacity: 1;
-        }
-    </style>
+      }
+    }
+  </script>
+  <style>
+    body { background-color: #0b0e14; color: #f3f4f6; font-family: 'Inter', sans-serif; }
+    .bg-grid { background-image: radial-gradient(#1f293d 1px, transparent 1px); background-size: 24px 24px; }
+    .custom-scroll::-webkit-scrollbar { width: 6px; }
+    .custom-scroll::-webkit-scrollbar-track { background: #0b0e14; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #1f293d; border-radius: 3px; }
+  </style>
 </head>
-<body class="grid-bg min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-black">
+<body class="bg-brand-bg min-h-screen flex flex-col bg-grid">
 
-    <!-- BARRA SUPERIOR DE ANÚNCIO -->
-    <div class="bg-gradient-to-r from-amber-600/20 via-amber-500/20 to-amber-600/20 border-b border-amber-500/30 text-amber-300 text-xs sm:text-sm py-2 px-4 text-center font-medium flex items-center justify-center gap-2">
-        <span class="inline-block w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-        <span id="topAnnouncementText">🎉 Use o cupom <strong class="text-white font-mono bg-amber-500/30 px-1.5 py-0.5 rounded border border-amber-500/50">TSL10</strong> para 10% OFF no seu primeiro pedido!</span>
+  <!-- Header / Navbar -->
+  <header class="border-b border-brand-border bg-brand-bg/90 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="switchView('store')">
+        <div class="w-10 h-10 rounded-xl bg-brand-accent/20 border border-brand-accent flex items-center justify-center text-brand-accent font-bold text-xl">
+          <i class="fa-solid fa-cube"></i>
+        </div>
+        <span class="text-2xl font-extrabold tracking-wider text-white" id="site-logo-text">TsL<span class="text-brand-accent">Plugins</span></span>
+      </div>
+
+      <nav class="hidden md:flex items-center space-x-8 font-medium">
+        <button onclick="switchView('store')" class="hover:text-brand-accent transition">Loja</button>
+        <button onclick="switchView('docs')" class="hover:text-brand-accent transition flex items-center gap-2">
+          <i class="fa-solid fa-book text-sm"></i> Documentação
+        </button>
+        <button onclick="switchView('client')" class="hover:text-brand-accent transition flex items-center gap-2">
+          <i class="fa-solid fa-user text-sm"></i> Painel do Cliente
+        </button>
+      </nav>
+
+      <div class="flex items-center space-x-4">
+        <button onclick="toggleCart()" class="relative p-2.5 rounded-lg border border-brand-border bg-brand-card hover:border-brand-accent transition">
+          <i class="fa-solid fa-cart-shopping text-brand-accent"></i>
+          <span id="cart-count" class="absolute -top-2 -right-2 bg-brand-accent text-black font-bold text-xs w-5 h-5 rounded-full flex items-center justify-center">0</span>
+        </button>
+        <button onclick="openAdminLogin()" class="p-2.5 rounded-lg border border-brand-border bg-brand-card hover:border-brand-accent text-gray-400 hover:text-brand-accent transition">
+          <i class="fa-solid fa-gear"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+  <!-- View principal: LOJA -->
+  <main id="view-store" class="flex-grow max-w-7xl mx-auto px-4 py-8 w-full">
+    <!-- Hero Banner -->
+    <div class="relative rounded-2xl border border-brand-border bg-brand-card p-8 md:p-12 mb-12 overflow-hidden text-center md:text-left">
+      <div class="relative z-10 max-w-2xl">
+        <span class="inline-block px-3 py-1 bg-brand-accent/10 border border-brand-accent/30 text-brand-accent text-xs font-semibold rounded-full mb-4">
+          <i class="fa-solid fa-bolt mr-1"></i> Alta Performance & Anti-Lag
+        </span>
+        <h1 class="text-3xl md:text-5xl font-black mb-4 text-white leading-tight" id="hero-title">Eleve o Nível do Seu Servidor de Minecraft</h1>
+        <p class="text-gray-400 text-base md:text-lg mb-6" id="hero-desc">Plugins otimizados de alto desempenho com suporte dedicado, segurança avançada e atualizações constantes.</p>
+        <div class="flex flex-wrap gap-4 justify-center md:justify-start">
+          <button onclick="switchView('docs')" class="px-6 py-3 bg-brand-card border border-brand-border hover:border-brand-accent rounded-xl font-semibold transition">
+            Ver Documentação
+          </button>
+        </div>
+      </div>
     </div>
 
-    <!-- HEADER / NAVBAR -->
-    <header class="sticky top-0 z-40 bg-brand-bg/90 backdrop-blur-md border-b border-brand-border/60 transition-all">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <!-- LOGO -->
-            <a href="#" class="flex items-center gap-3 group">
-                <div id="navLogoContainer" class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-glow-gold group-hover:scale-105 transition-transform duration-300 overflow-hidden">
-                    <i data-lucide="terminal" class="w-6 h-6 text-slate-950 stroke-[2.5]"></i>
-                </div>
-                <div>
-                    <span id="navStoreName" class="text-xl font-black tracking-wider text-white">TsL<span class="text-brand-gold">Plugins</span></span>
-                    <span id="navStoreSub" class="block text-[10px] font-mono text-brand-muted tracking-widest uppercase -mt-1">Core & Systems</span>
-                </div>
-            </a>
-
-            <!-- NAVEGAÇÃO DESKTOP -->
-            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
-                <a href="#hero" class="hover:text-brand-gold transition-colors">Início</a>
-                <a href="#plugins" class="hover:text-brand-gold transition-colors">Plugins</a>
-                <a href="#recursos" class="hover:text-brand-gold transition-colors">Diferenciais</a>
-                <a href="#depoimentos" class="hover:text-brand-gold transition-colors">Depoimentos</a>
-                <a href="#faq" class="hover:text-brand-gold transition-colors">FAQ</a>
-                <a id="navDiscordLink" href="https://discord.gg" target="_blank" class="flex items-center gap-1.5 text-indigo-400 hover:text-indigo-300 transition-colors">
-                    <i data-lucide="disc" class="w-4 h-4"></i> Discord
-                </a>
-            </nav>
-
-            <!-- BOTÕES DE AÇÃO -->
-            <div class="flex items-center gap-4">
-                <!-- CARRINHO -->
-                <button id="cartBtn" onclick="toggleCart()" class="relative p-2.5 rounded-xl bg-brand-surface border border-brand-border text-slate-200 hover:border-brand-gold hover:text-brand-gold transition-all">
-                    <i data-lucide="shopping-cart" class="w-5 h-5"></i>
-                    <span id="cartCount" class="absolute -top-1.5 -right-1.5 bg-brand-gold text-slate-950 text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center scale-0 transition-transform">0</span>
-                </button>
-
-                <!-- PAINEL ADMIN -->
-                <button onclick="openAdminModal()" class="flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-brand-gold/10 border border-brand-gold/30 hover:bg-brand-gold hover:text-slate-950 text-brand-gold font-bold text-xs sm:text-sm transition-all shadow-glow-gold">
-                    <i data-lucide="shield-check" class="w-4 h-4"></i> Painel Admin
-                </button>
-
-                <!-- MOBILE MENU TOGGLE -->
-                <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg bg-brand-surface border border-brand-border text-slate-300">
-                    <i data-lucide="menu" class="w-6 h-6"></i>
-                </button>
-            </div>
-        </div>
-
-        <!-- MOBILE MENU -->
-        <div id="mobileMenu" class="hidden md:hidden bg-brand-surface border-b border-brand-border px-4 py-4 space-y-3">
-            <a href="#hero" onclick="toggleMobileMenu()" class="block text-slate-300 hover:text-brand-gold py-1">Início</a>
-            <a href="#plugins" onclick="toggleMobileMenu()" class="block text-slate-300 hover:text-brand-gold py-1">Plugins</a>
-            <a href="#recursos" onclick="toggleMobileMenu()" class="block text-slate-300 hover:text-brand-gold py-1">Diferenciais</a>
-            <a href="#depoimentos" onclick="toggleMobileMenu()" class="block text-slate-300 hover:text-brand-gold py-1">Depoimentos</a>
-            <a href="#faq" onclick="toggleMobileMenu()" class="block text-slate-300 hover:text-brand-gold py-1">FAQ</a>
-            <button onclick="openAdminModal(); toggleMobileMenu();" class="flex items-center gap-2 text-brand-gold font-bold py-1 w-full text-left">
-                <i data-lucide="shield-check" class="w-4 h-4"></i> Painel Admin
-            </button>
-            <a href="https://discord.gg" target="_blank" class="flex items-center gap-2 text-indigo-400 py-1">
-                <i data-lucide="disc" class="w-4 h-4"></i> Discord
-            </a>
-        </div>
-    </header>
-
-    <!-- HERO SECTION -->
-    <section id="hero" class="relative pt-12 pb-16 md:pt-20 md:pb-28 overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center max-w-3xl mx-auto">
-                <div id="heroBadge" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-surface border border-brand-border text-xs font-mono text-brand-gold mb-6">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                    SUPORTE COMPATÍVEL COM SPIGOT / PAPER 1.8 - 1.20+
-                </div>
-
-                <h1 class="text-4xl sm:text-6xl font-black text-white tracking-tight leading-tight">
-                    Sistemas Robustos para a <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-200 to-amber-500">Nova Era</span> do seu Servidor.
-                </h1>
-
-                <p class="mt-6 text-lg sm:text-xl text-brand-muted font-normal leading-relaxed">
-                    Plugins de alta performance focados em 0% de lag, execução assíncrona e arquitetura limpa. Leve a experiência do seu servidor Minecraft ao topo do mercado.
-                </p>
-
-                <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-                    <a href="#plugins" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-base shadow-glow-gold hover:scale-105 transition-all flex items-center justify-center gap-2">
-                        <i data-lucide="sparkles" class="w-5 h-5"></i> Explorar Plugins
-                    </a>
-                    <a id="heroDiscordBtn" href="https://discord.gg" target="_blank" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-brand-surface border border-brand-border hover:border-indigo-500 text-slate-200 hover:text-white font-semibold text-base transition-all flex items-center justify-center gap-2">
-                        <i data-lucide="disc" class="w-5 h-5 text-indigo-400"></i> Comunidade no Discord
-                    </a>
-                </div>
-
-                <!-- STATS -->
-                <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 p-6 rounded-2xl bg-brand-surface/60 border border-brand-border/80 backdrop-blur">
-                    <div class="p-2">
-                        <div class="text-2xl sm:text-3xl font-black text-white font-mono">+50.000</div>
-                        <div class="text-xs text-brand-muted uppercase font-semibold mt-1">Downloads Realizados</div>
-                    </div>
-                    <div class="p-2">
-                        <div class="text-2xl sm:text-3xl font-black text-brand-gold font-mono">99.9%</div>
-                        <div class="text-xs text-brand-muted uppercase font-semibold mt-1">SLA Uptime & Zero Lag</div>
-                    </div>
-                    <div class="p-2">
-                        <div class="text-2xl sm:text-3xl font-black text-white font-mono">+600</div>
-                        <div class="text-xs text-brand-muted uppercase font-semibold mt-1">Servidores Atendidos</div>
-                    </div>
-                    <div class="p-2">
-                        <div class="text-2xl sm:text-3xl font-black text-emerald-400 font-mono">4.9/5★</div>
-                        <div class="text-xs text-brand-muted uppercase font-semibold mt-1">Avaliação Média</div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- CATALOG & FILTERS SECTION -->
-    <section id="plugins" class="py-16 bg-brand-bg relative border-t border-brand-border/40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-6">
-                <div>
-                    <span class="text-brand-gold font-mono text-sm font-semibold tracking-wider uppercase">Catálogo Premium</span>
-                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-1">Plugins Disponíveis</h2>
-                </div>
-
-                <!-- CAMPO DE BUSCA -->
-                <div class="relative w-full md:w-80">
-                    <i data-lucide="search" class="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-muted"></i>
-                    <input type="text" id="searchInput" onkeyup="applyFilters()" placeholder="Buscar plugin por nome..." class="w-full bg-brand-surface border border-brand-border rounded-xl pl-11 pr-4 py-2.5 text-sm text-white placeholder-brand-muted focus:outline-none focus:border-brand-gold transition-all">
-                </div>
-            </div>
-
-            <!-- FILTROS POR TIPO E CATEGORIAS -->
-            <div class="p-4 rounded-2xl bg-brand-surface/60 border border-brand-border/80 mb-10 space-y-4">
-                
-                <div>
-                    <span class="text-xs font-mono text-brand-muted uppercase block mb-2">Filtrar por Modalidade:</span>
-                    <div class="flex flex-wrap gap-2" id="typeFilterButtons">
-                        <button onclick="setTypeFilter('all')" class="type-filter-btn active px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all bg-brand-gold text-slate-950 shadow-glow-gold" data-type="all">Todos</button>
-                        <button onclick="setTypeFilter('pago')" class="type-filter-btn px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all bg-brand-card border border-brand-border text-brand-muted hover:text-white" data-type="pago"><i data-lucide="tag" class="w-3.5 h-3.5 inline mr-1 text-amber-400"></i> Pagos</button>
-                        <button onclick="setTypeFilter('free')" class="type-filter-btn px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all bg-brand-card border border-brand-border text-brand-muted hover:text-white" data-type="free"><i data-lucide="gift" class="w-3.5 h-3.5 inline mr-1 text-emerald-400"></i> Grátis (Free)</button>
-                        <button onclick="setTypeFilter('destaque')" class="type-filter-btn px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all bg-brand-card border border-brand-border text-brand-muted hover:text-white" data-type="destaque"><i data-lucide="star" class="w-3.5 h-3.5 inline mr-1 text-amber-300"></i> Destaques / Promo</button>
-                    </div>
-                </div>
-
-                <div class="pt-3 border-t border-brand-border/40">
-                    <span class="text-xs font-mono text-brand-muted uppercase block mb-2">Categoria Temática:</span>
-                    <div class="flex flex-wrap gap-2">
-                        <button onclick="setCategory('all')" class="cat-btn active px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-white border border-slate-700 transition-all" data-cat="all">Todas</button>
-                        <button onclick="setCategory('economia')" class="cat-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-card border border-brand-border text-brand-muted hover:text-white transition-all" data-cat="economia">Economia</button>
-                        <button onclick="setCategory('facções')" class="cat-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-card border border-brand-border text-brand-muted hover:text-white transition-all" data-cat="facções">Facções & Rankup</button>
-                        <button onclick="setCategory('segurança')" class="cat-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-card border border-brand-border text-brand-muted hover:text-white transition-all" data-cat="segurança">Segurança</button>
-                        <button onclick="setCategory('utilitários')" class="cat-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-card border border-brand-border text-brand-muted hover:text-white transition-all" data-cat="utilitários">Utilitários</button>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- GRID DE PLUGINS -->
-            <div id="pluginsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Renderizado via JS -->
-            </div>
-
-        </div>
-    </section>
-
-    <!-- RECURSOS / DIFERENCIAIS -->
-    <section id="recursos" class="py-20 bg-brand-surface/40 border-t border-brand-border/40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-2xl mx-auto mb-16">
-                <span class="text-brand-gold font-mono text-sm font-semibold uppercase">Qualidade Incomparável</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">Por que escolher a TsLPlugins?</h2>
-                <p class="text-brand-muted mt-3">Desenvolvemos com o padrão de engenharia mais rigoroso da comunidade para garantir estabilidade absoluta.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="p-6 rounded-2xl bg-brand-card border border-brand-border hover:border-brand-gold/50 transition-all group">
-                    <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 text-brand-gold flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
-                        <i data-lucide="zap" class="w-6 h-6"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-2">Execução 100% Async</h3>
-                    <p class="text-brand-muted text-sm leading-relaxed">
-                        Nossas consultas a banco de dados e cálculos pesados ocorrem totalmente fora da Main Thread do Spigot. TPS intacto em 20.0.
-                    </p>
-                </div>
-
-                <div class="p-6 rounded-2xl bg-brand-card border border-brand-border hover:border-cyan-500/50 transition-all group">
-                    <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
-                        <i data-lucide="shield-check" class="w-6 h-6"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-2">Proteção & Licenciamento</h3>
-                    <p class="text-brand-muted text-sm leading-relaxed">
-                        Sistema próprio de autenticação com DRM leve, sem impacto de performance e blindado contra explorações e dupes conhecidos.
-                    </p>
-                </div>
-
-                <div class="p-6 rounded-2xl bg-brand-card border border-brand-border hover:border-emerald-500/50 transition-all group">
-                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
-                        <i data-lucide="headphones" class="w-6 h-6"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-white mb-2">Suporte Prioritário 24/7</h3>
-                    <p class="text-brand-muted text-sm leading-relaxed">
-                        Equipe especializada em Java e administração de servidores pronta para auxiliar em configurações e dúvidas.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- DEPOIMENTOS -->
-    <section id="depoimentos" class="py-20 bg-brand-bg border-t border-brand-border/40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-2xl mx-auto mb-16">
-                <span class="text-brand-gold font-mono text-sm font-semibold uppercase">Prova Social</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">Quem utiliza recomenda</h2>
-                <p class="text-brand-muted mt-2">Veja a opinião de donos de redes e gestores de servidores.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="p-6 rounded-2xl bg-brand-surface border border-brand-border flex flex-col justify-between">
-                    <p class="text-slate-300 text-sm italic mb-6">
-                        "Substituímos todo o sistema de economia antigo pelo TsL-Economy na nossa rede com 350+ players simultâneos. O TPS estabilizou em 20.0 imediatamente."
-                    </p>
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-slate-800 border border-amber-500/30 flex items-center justify-center text-brand-gold font-bold font-mono">RK</div>
-                        <div>
-                            <div class="text-sm font-bold text-white">Raikou_</div>
-                            <div class="text-xs text-brand-muted">Fundador da Redecraft</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-6 rounded-2xl bg-brand-surface border border-brand-border flex flex-col justify-between">
-                    <p class="text-slate-300 text-sm italic mb-6">
-                        "O TsL-Guard foi o único que realmente barrou clientes de hack customizados no nosso servidor de Facções. Suporte nota 10 no Discord!"
-                    </p>
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-slate-800 border border-cyan-500/30 flex items-center justify-center text-cyan-400 font-bold font-mono">VN</div>
-                        <div>
-                            <div class="text-sm font-bold text-white">Vortex_Dev</div>
-                            <div class="text-xs text-brand-muted">Admin da StarNetwork</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="p-6 rounded-2xl bg-brand-surface border border-brand-border flex flex-col justify-between">
-                    <p class="text-slate-300 text-sm italic mb-6">
-                        "A facilidade para configurar as menus GUIs e as integrações com PlaceholderAPI tornam os plugins da TsL os melhores do mercado atual."
-                    </p>
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-slate-800 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold font-mono">GD</div>
-                        <div>
-                            <div class="text-sm font-bold text-white">GabrielD</div>
-                            <div class="text-xs text-brand-muted">Dono do CraftBrasil</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FAQ SECTION -->
-    <section id="faq" class="py-20 bg-brand-surface/30 border-t border-brand-border/40">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <span class="text-brand-gold font-mono text-sm font-semibold uppercase">Dúvidas Frequentes</span>
-                <h2 class="text-3xl font-extrabold text-white mt-2">Perguntas Frequentes</h2>
-            </div>
-
-            <div class="space-y-4">
-                <div class="border border-brand-border rounded-xl bg-brand-surface overflow-hidden">
-                    <button onclick="toggleFaq(this)" class="w-full text-left p-5 flex justify-between items-center text-white font-semibold text-base focus:outline-none">
-                        <span>Como recebo o plugin após a compra?</span>
-                        <i data-lucide="chevron-down" class="w-5 h-5 text-brand-gold transition-transform duration-300"></i>
-                    </button>
-                    <div class="faq-content hidden px-5 pb-5 text-sm text-brand-muted leading-relaxed border-t border-brand-border/40 pt-3">
-                        A liberação é instantânea! Assim que o pagamento for confirmado, o arquivo `.jar` e sua chave de licença ficarão disponíveis para download imediato.
-                    </div>
-                </div>
-
-                <div class="border border-brand-border rounded-xl bg-brand-surface overflow-hidden">
-                    <button onclick="toggleFaq(this)" class="w-full text-left p-5 flex justify-between items-center text-white font-semibold text-base focus:outline-none">
-                        <span>Os plugins funcionam em quais versões do Minecraft?</span>
-                        <i data-lucide="chevron-down" class="w-5 h-5 text-brand-gold transition-transform duration-300"></i>
-                    </button>
-                    <div class="faq-content hidden px-5 pb-5 text-sm text-brand-muted leading-relaxed border-t border-brand-border/40 pt-3">
-                        A maioria dos nossos sistemas suporta ativamente desde a versão 1.8.x até a 1.20.x (Paper, Purpur, Spigot e Forks).
-                    </div>
-                </div>
-
-                <div class="border border-brand-border rounded-xl bg-brand-surface overflow-hidden">
-                    <button onclick="toggleFaq(this)" class="w-full text-left p-5 flex justify-between items-center text-white font-semibold text-base focus:outline-none">
-                        <span>Como funciona o suporte técnico?</span>
-                        <i data-lucide="chevron-down" class="w-5 h-5 text-brand-gold transition-transform duration-300"></i>
-                    </button>
-                    <div class="faq-content hidden px-5 pb-5 text-sm text-brand-muted leading-relaxed border-t border-brand-border/40 pt-3">
-                        Oferecemos suporte direto via Ticket no nosso servidor do Discord oficial com tempo médio de resposta inferior a 30 minutos.
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- RODAPÉ COMPLETO DA TSLPLUGINS -->
-    <footer class="bg-brand-surface border-t border-brand-border pt-16 pb-8 relative overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
-                
-                <div class="lg:col-span-2 space-y-4">
-                    <a href="#" class="flex items-center gap-3">
-                        <div id="footerLogoContainer" class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-glow-gold overflow-hidden">
-                            <i data-lucide="terminal" class="w-6 h-6 text-slate-950 stroke-[2.5]"></i>
-                        </div>
-                        <span id="footerStoreName" class="text-2xl font-black text-white tracking-wider">TsL<span class="text-brand-gold">Plugins</span></span>
-                    </a>
-                    <p class="text-sm text-brand-muted leading-relaxed max-w-sm">
-                        A loja #1 em engenharia de softwares e plugins premium para servidores de Minecraft. Projetado com foco em concorrência zero-lag, segurança avançada e otimização de tps.
-                    </p>
-                    
-                    <div class="pt-2 space-y-2 text-xs text-brand-muted">
-                        <div class="flex items-center gap-2">
-                            <i data-lucide="mail" class="w-4 h-4 text-brand-gold"></i>
-                            <span id="footerEmail">contato@tslplugins.com.br</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <i data-lucide="clock" class="w-4 h-4 text-brand-gold"></i>
-                            <span>Atendimento: Segunda a Sábado (09h - 22h)</span>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center gap-2.5 pt-2">
-                        <a id="footDiscord" href="https://discord.gg" target="_blank" title="Discord Oficial" class="w-9 h-9 rounded-xl bg-brand-card border border-brand-border flex items-center justify-center text-slate-300 hover:text-indigo-400 hover:border-indigo-500/50 transition-all">
-                            <i data-lucide="disc" class="w-4 h-4"></i>
-                        </a>
-                        <a id="footGithub" href="https://github.com" target="_blank" title="GitHub" class="w-9 h-9 rounded-xl bg-brand-card border border-brand-border flex items-center justify-center text-slate-300 hover:text-white hover:border-slate-500 transition-all">
-                            <i data-lucide="github" class="w-4 h-4"></i>
-                        </a>
-                        <a id="footSpigot" href="https://spigotmc.org" target="_blank" title="SpigotMC" class="w-9 h-9 rounded-xl bg-brand-card border border-brand-border flex items-center justify-center text-slate-300 hover:text-amber-400 hover:border-amber-500/50 transition-all">
-                            <i data-lucide="code-2" class="w-4 h-4"></i>
-                        </a>
-                        <a id="footYoutube" href="https://youtube.com" target="_blank" title="YouTube" class="w-9 h-9 rounded-xl bg-brand-card border border-brand-border flex items-center justify-center text-slate-300 hover:text-red-400 hover:border-red-500/50 transition-all">
-                            <i data-lucide="youtube" class="w-4 h-4"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div>
-                    <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4 font-mono text-brand-gold">Links Úteis</h4>
-                    <ul class="space-y-2.5 text-sm text-brand-muted">
-                        <li><a href="#hero" class="hover:text-white transition-colors flex items-center gap-1.5"><i data-lucide="chevron-right" class="w-3 h-3 text-brand-gold"></i> Início</a></li>
-                        <li><a href="#plugins" class="hover:text-white transition-colors flex items-center gap-1.5"><i data-lucide="chevron-right" class="w-3 h-3 text-brand-gold"></i> Catálogo Completo</a></li>
-                        <li><a href="#recursos" class="hover:text-white transition-colors flex items-center gap-1.5"><i data-lucide="chevron-right" class="w-3 h-3 text-brand-gold"></i> Diferenciais</a></li>
-                        <li><a href="#depoimentos" class="hover:text-white transition-colors flex items-center gap-1.5"><i data-lucide="chevron-right" class="w-3 h-3 text-brand-gold"></i> Avaliações</a></li>
-                        <li><a href="#faq" class="hover:text-white transition-colors flex items-center gap-1.5"><i data-lucide="chevron-right" class="w-3 h-3 text-brand-gold"></i> FAQ</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4 font-mono text-brand-gold">Categorias</h4>
-                    <ul class="space-y-2.5 text-sm text-brand-muted">
-                        <li><button onclick="setCategory('economia')" class="hover:text-white transition-colors flex items-center gap-1.5"><i data-lucide="coins" class="w-3.5 h-3.5 text-amber-400"></i> Economia</button></li>
-                        <li><button onclick="setCategory('facções')" class="hover:text-white transition-colors flex items-center gap-1.5"><i data-lucide="swords" class="w-3.5 h-3.5 text-red-400"></i> Facções & Rankup</button></li>
-                        <li><button onclick="setCategory('segurança')" class="hover:text-white transition-colors flex items-center gap-1.5"><i data-lucide="shield" class="w-3.5 h-3.5 text-cyan-400"></i> Segurança</button></li>
-                        <li><button onclick="setCategory('utilitários')" class="hover:text-white transition-colors flex items-center gap-1.5"><i data-lucide="wrench" class="w-3.5 h-3.5 text-emerald-400"></i> Utilitários</button></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4 font-mono text-brand-gold">Suporte & Legal</h4>
-                    <ul class="space-y-2.5 text-sm text-brand-muted">
-                        <li><a id="footerDiscordLink" href="https://discord.gg" target="_blank" class="hover:text-white transition-colors flex items-center gap-1.5 text-indigo-400"><i data-lucide="external-link" class="w-3.5 h-3.5"></i> Central no Discord</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Termos de Uso (ToS)</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">Política de Reembolso</a></li>
-                        <li class="pt-2">
-                            <button onclick="openAdminModal()" class="w-full text-left px-3 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-brand-gold font-bold text-xs hover:bg-brand-gold hover:text-slate-950 transition-all flex items-center gap-1.5">
-                                <i data-lucide="lock" class="w-3.5 h-3.5"></i> Acesso Restrito Admin
-                            </button>
-                        </li>
-                    </ul>
-                </div>
-
-            </div>
-
-            <div class="border-t border-brand-border/60 py-6 my-6 flex flex-col md:flex-row items-center justify-between gap-4">
-                <div class="flex items-center gap-2 text-xs text-brand-muted">
-                    <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
-                    <span>Ambiente 100% Seguro com Criptografia SSL e Entrega Automatizada</span>
-                </div>
-                <div class="flex items-center gap-3">
-                    <span class="text-xs text-brand-muted font-mono uppercase">Pagamento:</span>
-                    <span class="px-2.5 py-1 rounded bg-brand-card border border-brand-border text-xs text-emerald-400 font-bold font-mono">PIX (Instantâneo)</span>
-                    <span class="px-2.5 py-1 rounded bg-brand-card border border-brand-border text-xs text-slate-300 font-mono">Cartão de Crédito</span>
-                </div>
-            </div>
-
-            <div class="border-t border-brand-border/40 pt-6 flex flex-col md:flex-row justify-between items-center text-xs text-brand-muted gap-4">
-                <p>&copy; 2026 TsLPlugins. Todos os direitos reservados.</p>
-                <div class="flex items-center gap-4">
-                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full
-bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-mono">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Sistema Operacional
-                    </span>
-                    <span class="font-mono text-slate-500">v2.6.0-PRO</span>
-                </div>
-            </div>
-
-        </div>
-    </footer>
-
-    <!-- MODAL DETALHES -->
-    <div id="pluginModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-brand-card border border-brand-border rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 sm:p-8 relative shadow-2xl">
-            <button onclick="closeModal()" class="absolute top-4 right-4 text-brand-muted hover:text-white p-1">
-                <i data-lucide="x" class="w-6 h-6"></i>
-            </button>
-            <div id="modalContent"></div>
-        </div>
+    <!-- Catálogo de Plugins -->
+    <div class="flex justify-between items-center mb-8">
+      <h2 class="text-2xl font-bold text-white">Catálogo de Plugins</h2>
+      <input type="text" id="search-input" oninput="filterPlugins()" placeholder="Buscar plugin..." class="bg-brand-card border border-brand-border rounded-xl px-4 py-2 text-sm focus:border-brand-accent outline-none text-white w-64">
     </div>
 
-    <!-- PAINEL ADMINISTRATIVO MODAL -->
-    <div id="adminModal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-6">
-        <div class="bg-brand-surface border border-brand-border rounded-2xl w-full max-w-5xl h-[92vh] flex flex-col shadow-2xl overflow-hidden relative">
-            
-            <div class="px-6 py-4 border-b border-brand-border bg-brand-card flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-500/40 text-brand-gold flex items-center justify-center">
-                        <i data-lucide="settings" class="w-5 h-5"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-lg font-bold text-white flex items-center gap-2">Painel de Gerenciamento Total <span class="text-xs bg-amber-500/20 text-brand-gold px-2 py-0.5 rounded font-mono border border-amber-500/30">Admin</span></h3>
-                        <p class="text-xs text-brand-muted">Configure logos, cores, nomes e plugins em tempo real.</p>
-                    </div>
-                </div>
-                <button onclick="closeAdminModal()" class="p-2 rounded-xl bg-brand-surface border border-brand-border text-brand-muted hover:text-white transition-all">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
-
-            <!-- TELA DE LOGIN ADMIN -->
-            <div id="adminAuthScreen" class="flex-1 flex flex-col items-center justify-center p-6 text-center">
-                <div class="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-brand-gold flex items-center justify-center mb-4">
-                    <i data-lucide="lock" class="w-8 h-8"></i>
-                </div>
-                <h4 class="text-xl font-extrabold text-white mb-1">Acesso Restrito</h4>
-                <p class="text-sm text-brand-muted mb-6 max-w-sm">Digite a PIN Master do Administrador (PIN Padrão: <code class="text-brand-gold font-mono">1234</code>).</p>
-                <div class="flex gap-2 max-w-xs w-full mb-4">
-                    <input type="password" id="adminPinInput" placeholder="PIN Secreto" class="w-full bg-brand-card border border-brand-border rounded-xl px-4 py-2.5 text-center text-lg font-mono text-white focus:outline-none focus:border-brand-gold transition-all">
-                    <button onclick="verifyAdminPin()" class="px-5 py-2.5 rounded-xl bg-brand-gold text-slate-950 font-bold hover:bg-brand-goldHover transition-all">Entrar</button>
-                </div>
-                <button onclick="bypassAdminPin()" class="text-xs text-brand-muted underline hover:text-white">Acessar direto sem senha (Modo Demo)</button>
-            </div>
-
-            <!-- DASHBOARD CONTEÚDO -->
-            <div id="adminDashboard" class="hidden flex-1 flex flex-col md:flex-row overflow-hidden">
-                <div class="w-full md:w-60 bg-brand-card border-r border-brand-border p-4 flex flex-col gap-2">
-                    <button onclick="switchAdminTab('pluginsTab')" id="tab-pluginsTab" class="admin-tab-btn active w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-white bg-brand-surface border border-brand-border text-left">
-                        <i data-lucide="package" class="w-4 h-4 text-brand-gold"></i> Gerenciar Plugins
-                    </button>
-                    <button onclick="switchAdminTab('settingsTab')" id="tab-settingsTab" class="admin-tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-brand-muted hover:text-white text-left">
-                        <i data-lucide="sliders" class="w-4 h-4"></i> Marca, Cores & Logo
-                    </button>
-
-                    <div class="mt-auto pt-4 border-t border-brand-border/60">
-                        <button onclick="resetToDefaults()" class="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-red-400 bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 transition-all">
-                            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> Restaurar Padrões
-                        </button>
-                    </div>
-                </div>
-
-                <div class="flex-1 overflow-y-auto p-6 bg-brand-bg">
-                    <!-- TAB PLUGINS -->
-                    <div id="pluginsTab" class="admin-tab-content space-y-6">
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                            <div>
-                                <h4 class="text-lg font-bold text-white">Plugins Cadastrados</h4>
-                                <p class="text-xs text-brand-muted">Adicione, edite ou remova produtos da sua loja.</p>
-                            </div>
-                            <button onclick="openPluginForm()" class="px-4 py-2.5 rounded-xl bg-brand-gold text-slate-950 font-bold text-sm flex items-center gap-2 shadow-glow-gold hover:bg-brand-goldHover transition-all">
-                                <i data-lucide="plus-circle" class="w-4 h-4"></i> Novo Plugin
-                            </button>
-                        </div>
-
-                        <div class="overflow-x-auto border border-brand-border rounded-xl bg-brand-surface">
-                            <table class="w-full text-left text-sm text-slate-300">
-                                <thead class="bg-brand-card text-xs font-mono uppercase text-brand-muted border-b border-brand-border">
-                                    <tr>
-                                        <th class="p-3.5">Plugin</th>
-                                        <th class="p-3.5">Tipo</th>
-                                        <th class="p-3.5">Preço</th>
-                                        <th class="p-3.5 text-right">Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="adminPluginsTable" class="divide-y divide-brand-border/60"></tbody>
-                            </table>
-                        </div>
-
-                        <!-- FORMULÁRIO PLUGINS -->
-                        <div id="pluginFormContainer" class="hidden border border-brand-border rounded-2xl bg-brand-surface p-6 space-y-4">
-                            <div class="flex items-center justify-between border-b border-brand-border pb-3">
-                                <h5 id="formTitle" class="text-base font-bold text-white">Adicionar Novo Plugin</h5>
-                                <button onclick="closePluginForm()" class="text-brand-muted hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
-                            </div>
-
-                            <input type="hidden" id="formPluginId">
-
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs font-semibold text-brand-muted mb-1">Nome do Plugin</label>
-                                    <input type="text" id="formName" placeholder="Ex: TsL-Economy Pro" class="w-full bg-brand-card border border-brand-border rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-brand-gold">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-brand-muted mb-1">Categoria</label>
-                                    <select id="formCategory" class="w-full bg-brand-card border border-brand-border rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-brand-gold">
-                                        <option value="economia">Economia</option>
-                                        <option value="facções">Facções & Rankup</option>
-                                        <option value="segurança">Segurança</option>
-                                        <option value="utilitários">Utilitários</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-brand-muted mb-1">Preço (R$) - 0 para Free</label>
-                                    <input type="number" step="0.01" id="formPrice" placeholder="49.90" class="w-full bg-brand-card border border-brand-border rounded-xl px-3.5 py-2 text-sm font-mono text-white focus:outline-none focus:border-brand-gold">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-brand-muted mb-1">Tag de Destaque</label>
-                                    <input type="text" id="formBadge" placeholder="Ex: Mais Vendido / Novo" class="w-full bg-brand-card border border-brand-border rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-brand-gold">
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="block text-xs font-semibold text-brand-muted mb-1">Descrição Curta</label>
-                                <input type="text" id="formShortDesc" placeholder="Breve resumo do plugin" class="w-full bg-brand-card border border-brand-border rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-brand-gold">
-                            </div>
-
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs font-semibold text-brand-muted mb-1">Comandos (vírgulas)</label>
-                                    <input type="text" id="formCommands" placeholder="/money, /pay" class="w-full bg-brand-card border border-brand-border rounded-xl px-3.5 py-2 text-sm font-mono text-white focus:outline-none focus:border-brand-gold">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-brand-muted mb-1">Dependências (vírgulas)</label>
-                                    <input type="text" id="formDeps" placeholder="Vault, PlaceholderAPI" class="w-full bg-brand-card border border-brand-border rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-brand-gold">
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="block text-xs font-semibold text-brand-muted mb-1">Recursos (vírgulas)</label>
-                                <input type="text" id="formFeatures" placeholder="Execução Async, Banco MySQL" class="w-full bg-brand-card border border-brand-border rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-brand-gold">
-                            </div>
-
-                            <div class="flex justify-end gap-3 pt-3">
-                                <button onclick="closePluginForm()" class="px-4 py-2 rounded-xl bg-brand-card border border-brand-border text-xs font-semibold text-brand-muted hover:text-white">Cancelar</button>
-                                <button onclick="savePluginFromForm()" class="px-5 py-2 rounded-xl bg-brand-gold text-slate-950 font-bold text-xs shadow-glow-gold hover:bg-brand-goldHover">Salvar Plugin</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- TAB CONFIGS / MARCA / CORES / LOGOS -->
-                    <div id="settingsTab" class="admin-tab-content hidden space-y-6">
-                        <div>
-                            <h4 class="text-lg font-bold text-white">Marca, Cores & Logos</h4>
-                            <p class="text-xs text-brand-muted">Personalize identidade visual, cores e nomes da loja.</p>
-                        </div>
-
-                        <div class="border border-brand-border rounded-2xl bg-brand-surface p-6 space-y-4">
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs font-semibold text-brand-muted mb-1">Nome da Loja</label>
-                                    <input type="text" id="cfgStoreName" class="w-full bg-brand-card border border-brand-border rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-brand-gold">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-brand-muted mb-1">Cor de Destaque Principal (HEX)</label>
-                                    <div class="flex gap-2">
-                                        <input type="color" id="cfgBrandColor" class="w-12 h-10 rounded-xl bg-brand-card border border-brand-border cursor-pointer p-1">
-                                        <input type="text" id="cfgBrandColorText" placeholder="#f59e0b" class="w-full bg-brand-card border border-brand-border rounded-xl px-3.5 py-2 text-sm text-white font-mono focus:outline-none focus:border-brand-gold">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="block text-xs font-semibold text-brand-muted mb-1">URL da Logo (Imagem ou deixe vazio para ícone padrão)</label>
-                                <input type="text" id="cfgLogoUrl" placeholder="https://exemplo.com/logo.png" class="w-full bg-brand-card border border-brand-border rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-brand-gold">
-                            </div>
-
-                            <div>
-                                <label class="block text-xs font-semibold text-brand-muted mb-1">Link do Discord</label>
-                                <input type="text" id="cfgDiscord" placeholder="https://discord.gg/seulink" class="w-full bg-brand-card border border-brand-border rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-brand-gold">
-                            </div>
-
-                            <div>
-                                <label class="block text-xs font-semibold text-brand-muted mb-1">Título do Banner Hero</label>
-                                <input type="text" id="cfgHeroTitle" class="w-full bg-brand-card border border-brand-border rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-brand-gold">
-                            </div>
-
-                            <div>
-                                <label class="block text-xs font-semibold text-brand-muted mb-1">Subtítulo do Banner Hero</label>
-                                <textarea id="cfgHeroSubtitle" rows="3" class="w-full bg-brand-card border border-brand-border rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-brand-gold"></textarea>
-                            </div>
-
-                            <div class="pt-3 flex justify-end">
-                                <button onclick="saveSiteSettings()" class="px-6 py-2.5 rounded-xl bg-brand-gold text-slate-950 font-bold text-sm shadow-glow-gold hover:bg-brand-goldHover">Salvar Alterações Globais</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+    <div id="plugin-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  </main>
+  <!-- View: DOCUMENTAÇÃO (Estilo yStore) -->
+  <main id="view-docs" class="hidden flex-grow max-w-7xl mx-auto px-4 py-8 w-full">
+    <div class="flex flex-col md:flex-row gap-8 min-h-[600px]">
+      <aside class="w-full md:w-64 border-r border-brand-border pr-4 space-y-6">
+        <div>
+          <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Introdução</h3>
+          <ul class="space-y-1 text-sm">
+            <li><button onclick="loadDocContent('install')" class="w-full text-left px-3 py-2 rounded-lg bg-brand-card text-brand-accent font-medium">Instalação & Requisitos</button></li>
+            <li><button onclick="loadDocContent('license')" class="w-full text-left px-3 py-2 rounded-lg hover:bg-brand-card text-gray-400 hover:text-white">Autenticação de Licença</button></li>
+          </ul>
         </div>
-    </div>
-
-    <!-- CARRINHO LATERAL -->
-    <div id="cartDrawer" class="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-brand-card border-l border-brand-border shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
-        <div class="p-6 border-b border-brand-border flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <i data-lucide="shopping-bag" class="w-5 h-5 text-brand-gold"></i>
-                <h3 class="text-lg font-bold text-white">Seu Carrinho</h3>
-            </div>
-            <button onclick="toggleCart()" class="text-brand-muted hover:text-white">
-                <i data-lucide="x" class="w-6 h-6"></i>
-            </button>
+        <div>
+          <h3 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Plugins</h3>
+          <ul class="space-y-1 text-sm" id="docs-plugin-list"></ul>
         </div>
+      </aside>
 
-        <div id="cartItems" class="flex-1 overflow-y-auto p-6 space-y-4"></div>
-
-        <div class="p-6 border-t border-brand-border bg-brand-surface space-y-4">
-            <div class="flex justify-between items-center text-sm">
-                <span class="text-brand-muted">Subtotal</span>
-                <span id="cartSubtotal" class="text-white font-mono font-bold">R$ 0,00</span>
-            </div>
-            <div class="flex justify-between items-center text-base font-bold">
-                <span class="text-white">Total</span>
-                <span id="cartTotal" class="text-brand-gold font-mono text-xl">R$ 0,00</span>
-            </div>
-            <button onclick="checkout()" class="w-full py-3.5 rounded-xl bg-brand-gold hover:bg-brand-goldHover text-slate-950 font-bold text-center shadow-glow-gold transition-all">
-                Finalizar Compra
-            </button>
+      <section class="flex-1 bg-brand-card border border-brand-border rounded-2xl p-6 md:p-8" id="docs-content">
+        <h1 class="text-3xl font-black text-white mb-4">Instalação</h1>
+        <p class="text-gray-400 mb-6">Aprenda a instalar os plugins da TsLPlugins no seu servidor Minecraft.</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <div class="border border-brand-border p-4 rounded-xl bg-brand-bg">
+            <i class="fa-solid fa-server text-brand-accent text-2xl mb-2"></i>
+            <h3 class="font-bold text-white">Bukkit / Paper</h3>
+            <p class="text-xs text-gray-400 mt-1">Compatível com versões 1.8 até 1.20+</p>
+          </div>
+          <div class="border border-brand-border p-4 rounded-xl bg-brand-bg">
+            <i class="fa-solid fa-network-wired text-brand-cyan text-2xl mb-2"></i>
+            <h3 class="font-bold text-white">BungeeCord</h3>
+            <p class="text-xs text-gray-400 mt-1">Suporte total a redes de servidores.</p>
+          </div>
+          <div class="border border-brand-border p-4 rounded-xl bg-brand-bg">
+            <i class="fa-solid fa-bolt text-green-400 text-2xl mb-2"></i>
+            <h3 class="font-bold text-white">Velocity</h3>
+            <p class="text-xs text-gray-400 mt-1">Alta performance em Proxies modernos.</p>
+          </div>
         </div>
+      </section>
     </div>
+  </main>
 
-    <!-- TOAST NOTIFICATION -->
-    <div id="toast" class="fixed bottom-5 right-5 z-50 flex items-center gap-3 px-4 py-3 rounded-xl bg-brand-surface border border-brand-gold text-white shadow-glow-gold toast-enter transition-all duration-300 pointer-events-none">
-        <i data-lucide="check-circle" class="w-5 h-5 text-brand-gold"></i>
-        <span id="toastMsg" class="text-sm font-medium">Operação realizada com sucesso!</span>
+  <!-- View: PAINEL DO CLIENTE -->
+  <main id="view-client" class="hidden flex-grow max-w-7xl mx-auto px-4 py-8 w-full">
+    <div class="bg-brand-card border border-brand-border rounded-2xl p-8 max-w-4xl mx-auto">
+      <h2 class="text-2xl font-bold text-white mb-6"><i class="fa-solid fa-user-gear text-brand-accent mr-2"></i> Painel do Cliente</h2>
+      <div class="space-y-4">
+        <div class="p-4 bg-brand-bg border border-brand-border rounded-xl">
+          <h3 class="font-bold text-white">Suas Licenças Ativas</h3>
+          <p class="text-sm text-gray-400 mt-1">Insira os IPs autorizados para utilizar os plugins nos seus servidores.</p>
+        </div>
+        <div id="client-licenses-list" class="space-y-3">
+          <p class="text-sm text-gray-500">Nenhum plugin adquirido no momento.</p>
+        </div>
+      </div>
     </div>
-
-    <!-- JAVASCRIPT MASTER LOGIC -->
-    <script>
-        const defaultState = {
-            settings: {
-                storeName: 'TsLPlugins',
-                brandColor: '#f59e0b',
-                logoUrl: '',
-                discordUrl: 'https://discord.gg',
-                heroTitle: 'Sistemas Robustos para a Nova Era do seu Servidor.',
-                heroSubtitle: 'Plugins de alta performance focados em 0% de lag, execução assíncrona e arquitetura limpa. Leve a experiência do seu servidor Minecraft ao topo do mercado.'
-            },
-            plugins: [
-                {
-                    id: 'tsl-economy',
-                    name: 'TsL-Economy Ultimate',
-                    category: 'economia',
-                    price: 49.90,
-                    rating: 5.0,
-                    badge: 'Mais Vendido',
-                    shortDesc: 'Sistema econômico completo com suporte a Multi-Moedas, Banco, Cheques e Mercado de Ações.',
-                    commands: ['/money', '/pay', '/bank', '/baltop'],
-                    permissions: ['tsleconomy.user', 'tsleconomy.admin'],
-                    dependencies: ['Vault', 'PlaceholderAPI'],
-                    features: ['Suporte a MySQL Async', 'GUI customizável', 'API para desenvolvedores', 'Logs no Discord']
-                },
-                {
-                    id: 'tsl-factions',
-                    name: 'TsL-Factions Core',
-                    category: 'facções',
-                    price: 89.90,
-                    rating: 4.9,
-                    badge: 'Destaque',
-                    shortDesc: 'Engine robusta para servidores de Facções. Sistema de Poder, Banners, Territórios e Guerras.',
-                    commands: ['/f criar', '/f dominar', '/f painel', '/f relacao'],
-                    permissions: ['tslfactions.play', 'tslfactions.admin'],
-                    dependencies: ['WorldGuard', 'PlaceholderAPI'],
-                    features: ['Visualização em tempo real', 'Sistema de Bônus de Facção', 'Zero consumo de tick', 'Placas interativas']
-                },
-                {
-                    id: 'tsl-anticheat',
-                    name: 'TsL-Guard AntiCheat',
-                    category: 'segurança',
-                    price: 119.90,
-                    rating: 5.0,
-                    badge: 'Novo',
-                    shortDesc: 'Proteção contra Hacks, Fly, KillAura e AutoClick baseada em análise heurística.',
-                    commands: ['/guard notify', '/guard check', '/guard ban'],
-                    permissions: ['tslguard.staff', 'tslguard.admin'],
-                    dependencies: ['ProtocolLib'],
-                    features: ['Detecção de Killaura avançada', 'Auto-punição customizável', 'Painel Staff In-Game']
-                },
-                {
-                    id: 'tsl-free-essentials',
-                    name: 'TsL-Core Essentials',
-                    category: 'utilitários',
-                    price: 0,
-                    rating: 4.9,
-                    badge: 'GRÁTIS',
-                    shortDesc: 'Comandos básicos de administração, spawn, tpa e kits essenciais de alta performance.',
-                    commands: ['/spawn', '/tpa', '/kit', '/fly'],
-                    permissions: ['tslcore.use'],
-                    dependencies: ['Nenhuma'],
-                    features: ['100% Leve', 'Mensagens customizáveis', 'Suporte a Hex Colors']
-                }
-            ]
-        };
-
-        let appState = loadState();
-        let cart = [];
-        let activeTypeFilter = 'all';
-        let activeCategoryFilter = 'all';
-
-        function loadState() {
-            try {
-                const saved = localStorage.getItem('tsl_app_state');
-                if (saved) {
-                    const parsed = JSON.parse(saved);
-                    if (parsed && parsed.settings && Array.isArray(parsed.plugins)) {
-                        return parsed;
-                    }
-                }
-            } catch(e) {}
-            return JSON.parse(JSON.stringify(defaultState));
-        }
-
-        function saveState() {
-            try {
-                localStorage.setItem('tsl_app_state', JSON.stringify(appState));
-            } catch(e) {}
-            applyGlobalSettings();
-            applyFilters();
-            renderAdminPluginsTable();
-        }
-
-        function applyGlobalSettings() {
-            const settings = appState.settings || {};
-            const storeName = settings.storeName || 'TsLPlugins';
-            const brandColor = settings.brandColor || '#f59e0b';
-            const logoUrl = settings.logoUrl || '';
-            const discordUrl = settings.discordUrl || 'https://discord.gg';
-
-            // Atualiza cor dinâmica e CSS vars
-            document.documentElement.style.setProperty('--brand-color', brandColor);
-            
-            const formattedName = `${storeName.replace(/Plugins$/i, '')}<span style="color: ${brandColor};">Plugins</span>`;
-            
-            const navEl = document.getElementById('navStoreName');
-            const footEl = document.getElementById('footerStoreName');
-            if (navEl) navEl.innerHTML = formattedName;
-            if (footEl) footEl.innerHTML = formattedName;
-
-            // Logos
-            const navLogo = document.getElementById('navLogoContainer');
-            const footLogo = document.getElementById('footerLogoContainer');
-            if (navLogo) {
-                if (logoUrl) {
-                    navLogo.innerHTML = `<img src="${logoUrl}" alt="Logo" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/40x40/121721/f59e0b?text=TSL'">`;
-                } else {
-                    navLogo.innerHTML = `<i data-lucide="terminal" class="w-6 h-6 text-slate-950 stroke-[2.5]"></i>`;
-                }
-            }
-            if (footLogo) {
-                if (logoUrl) {
-                    footLogo.innerHTML = `<img src="${logoUrl}" alt="Logo" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/40x40/121721/f59e0b?text=TSL'">`;
-                } else {
-                    footLogo.innerHTML = `<i data-lucide="terminal" class="w-6 h-6 text-slate-950 stroke-[2.5]"></i>`;
-                }
-            }
-
-            // Links Discord
-            const d1 = document.getElementById('navDiscordLink');
-            const d2 = document.getElementById('heroDiscordBtn');
-            const d3 = document.getElementById('footDiscord');
-            const d4 = document.getElementById('footerDiscordLink');
-            if (d1) d1.href = discordUrl;
-            if (d2) d2.href = discordUrl;
-            if (d3) d3.href = discordUrl;
-            if (d4) d4.href = discordUrl;
-
-            // Hero Texts
-            const heroTitle = document.querySelector('#hero h1');
-            if (heroTitle && settings.heroTitle) {
-                heroTitle.innerHTML = settings.heroTitle;
-            }
-            const heroSub = document.querySelector('#hero p');
-            if (heroSub && settings.heroSubtitle) {
-                heroSub.innerText = settings.heroSubtitle;
-            }
-
-            const pageTitle = document.getElementById('pageTitle');
-            if (pageTitle) pageTitle.innerText = `${storeName} - Loja Oficial`;
-
-            if (window.lucide) lucide.createIcons();
-        }
-
-        window.onload = function() {
-            if (window.lucide) {
-                lucide.createIcons();
-            }
-            applyGlobalSettings();
-            applyFilters();
-        };
-
-        function setTypeFilter(type) {
-            activeTypeFilter = type;
-            document.querySelectorAll('.type-filter-btn').forEach(btn => {
-                if (btn.dataset.type === type) {
-                    btn.className = 'type-filter-btn active px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all bg-[var(--brand-color,#f59e0b)] text-slate-950 shadow-glow-gold';
-                } else {
-                    btn.className = 'type-filter-btn px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all bg-brand-card border border-brand-border text-brand-muted hover:text-white';
-                }
-            });
-            applyFilters();
-        }
-
-        function setCategory(cat) {
-            activeCategoryFilter = cat;
-            document.querySelectorAll('.cat-btn').forEach(btn => {
-                if (btn.dataset.cat === cat) {
-                    btn.className = 'cat-btn active px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-white border border-slate-700 transition-all';
-                } else {
-                    btn.className = 'cat-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-card border border-brand-border text-brand-muted hover:text-white transition-all';
-                }
-            });
-            applyFilters();
-        }
-
-        function applyFilters() {
-            const grid = document.getElementById('pluginsGrid');
-            if (!grid) return;
-
-            const searchInput = document.getElementById('searchInput');
-            const search = searchInput ? searchInput.value.toLowerCase() : '';
-            
-            grid.innerHTML = '';
-
-            const filtered = (appState.plugins || []).filter(p => {
-                const matchCat = activeCategoryFilter === 'all' || p.category === activeCategoryFilter;
-                const matchSearch = (p.name || '').toLowerCase().includes(search) || (p.shortDesc || '').toLowerCase().includes(search);
-
-                let matchType = true;
-                if (activeTypeFilter === 'pago') matchType = p.price > 0;
-                if (activeTypeFilter === 'free') matchType = p.price === 0;
-                if (activeTypeFilter === 'destaque') matchType = p.badge && p.badge.toLowerCase().includes('destaque');
-
-                return matchCat && matchSearch && matchType;
-            });
-
-            if (filtered.length === 0) {
-                grid.innerHTML = `
-                    <div class="col-span-full py-16 text-center text-brand-muted">
-                        <i data-lucide="package-x" class="w-12 h-12 mx-auto mb-3 opacity-40"></i>
-                        <p class="text-base font-semibold text-white">Nenhum plugin encontrado.</p>
-                        <p class="text-xs text-brand-muted mt-1">Tente mudar os filtros ou a palavra pesquisada.</p>
-                    </div>
-                `;
-                if (window.lucide) lucide.createIcons();
-                return;
-            }
-
-            filtered.forEach(plugin => {
-                const card = document.createElement('div');
-                card.className = 'rounded-2xl bg-brand-surface border border-brand-border hover:border-brand-gold/60 transition-all duration-300 flex flex-col justify-between overflow-hidden group shadow-card-depth';
-                
-                const isFree = plugin.price === 0;
-                const priceText = isFree ? '<span class="text-emerald-400 font-bold">GRÁTIS</span>' : `R$ ${Number(plugin.price).toFixed(2).replace('.', ',')}`;
-
-                card.innerHTML = `
-                    <div class="p-6">
-                        <div class="flex items-center justify-between mb-4">
-                            ${plugin.badge ? `<span class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${isFree ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-amber-500/10 text-brand-gold border border-amber-500/20'}">${plugin.badge}</span>` : '<span></span>'}
-                            <div class="flex items-center gap-1 text-amber-400 text-xs font-bold font-mono">
-                                <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i>
-                                ${(plugin.rating || 5.0).toFixed(1)}
-                            </div>
-                        </div>
-
-                        <h3 class="text-xl font-bold text-white group-hover:text-[var(--brand-color,#f59e0b)] transition-colors">${plugin.name}</h3>
-                        <p class="text-brand-muted text-sm mt-2 line-clamp-2 leading-relaxed">${plugin.shortDesc}</p>
-
-                        <div class="mt-6 pt-4 border-t border-brand-border/60 flex items-center justify-between">
-                            <div>
-                                <span class="text-xs text-brand-muted block font-mono uppercase">Valor</span>
-                                <span class="text-2xl font-black text-white font-mono">${priceText}</span>
-                            </div>
-                            <button onclick="openModal('${plugin.id}')" class="text-xs font-semibold text-[var(--brand-color,#f59e0b)] hover:underline flex items-center gap-1">
-                                Detalhes <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="p-4 bg-brand-card border-t border-brand-border/60 flex gap-2">
-                        <button onclick="addToCart('${plugin.id}')" class="flex-1 py-2.5 rounded-xl bg-[var(--brand-color,#f59e0b)] hover:opacity-90 text-slate-950 font-bold text-sm flex items-center justify-center gap-2 transition-all">
-                            <i data-lucide="shopping-cart" class="w-4 h-4"></i> ${isFree ? 'Baixar Grátis' : 'Adicionar ao Carrinho'}
-                        </button>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-
-            if (window.lucide) lucide.createIcons();
-        }
-
-        function addToCart(pluginId) {
-            const plugin = appState.plugins.find(p => p.id === pluginId);
-            if (!plugin) return;
-
-            const existing = cart.find(item => item.id === pluginId);
-            if (!existing) cart.push(plugin);
-
-            updateCartUI();
-            showToast(`"${plugin.name}" adicionado ao carrinho!`);
-        }
-
-        function removeFromCart(pluginId) {
-            cart = cart.filter(item => item.id !== pluginId);
-            updateCartUI();
-        }
-
-        function updateCartUI() {
-            const cartCount = document.getElementById('cartCount');
-            const cartItems = document.getElementById('cartItems');
-            const cartSubtotal = document.getElementById('cartSubtotal');
-            const cartTotal = document.getElementById('cartTotal');
-
-            if (cartCount) {
-                cartCount.innerText = cart.length;
-                cartCount.classList.toggle('scale-0', cart.length === 0);
-            }
-
-            if (!cartItems) return;
-
-            if (cart.length === 0) {
-                cartItems.innerHTML = `
-                    <div class="text-center py-12 text-brand-muted">
-                        <i data-lucide="shopping-bag" class="w-12 h-12 mx-auto mb-3 opacity-40"></i>
-                        <p class="text-sm">Seu carrinho está vazio.</p>
-                    </div>
-                `;
-            } else {
-                cartItems.innerHTML = '';
-                cart.forEach(item => {
-                    const el = document.createElement('div');
-                    el.className = 'p-3 rounded-xl bg-brand-surface border border-brand-border flex items-center justify-between gap-3';
-                    const priceLabel = item.price === 0 ? 'Grátis' : `R$ ${Number(item.price).toFixed(2).replace('.', ',')}`;
-                    el.innerHTML = `
-                        <div class="flex-1">
-                            <h4 class="text-sm font-bold text-white">${item.name}</h4>
-                            <span class="text-xs font-mono text-[var(--brand-color,#f59e0b)]">${priceLabel}</span>
-                        </div>
-                        <button onclick="removeFromCart('${item.id}')" class="text-brand-muted hover:text-red-400 p-1">
-                            <i data-lucide="trash-2" class="w-4 h-4"></i>
-                        </button>
-                    `;
-                    cartItems.appendChild(el);
-                });
-            }
-
-            const total = cart.reduce((acc, curr) => acc + (Number(curr.price) || 0), 0);
-            if (cartSubtotal) cartSubtotal.innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
-            if (cartTotal) cartTotal.innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
-
-            if (window.lucide) lucide.createIcons();
-        }
-
-        function toggleCart() {
-            const drawer = document.getElementById('cartDrawer');
-            if (drawer) drawer.classList.toggle('translate-x-full');
-        }
-
-        function checkout() {
-            if (cart.length === 0) {
-                showToast('Seu carrinho está vazio!');
-                return;
-            }
-            showToast('Redirecionando para o Gateway de Pagamento seguro...');
-        }
-
-        function openModal(pluginId) {
-            const plugin = appState.plugins.find(p => p.id === pluginId);
-            if (!plugin) return;
-
-            const modalContent = document.getElementById('modalContent');
-            const isFree = plugin.price === 0;
-
-            if (modalContent) {
-                modalContent.innerHTML = `
-                    <div class="flex items-center gap-3 mb-2">
-                        <span class="px-2.5 py-1 rounded bg-amber-500/10 text-[var(--brand-color,#f59e0b)] font-mono text-xs uppercase border border-amber-500/20">${plugin.category}</span>
-                        <span class="text-xs text-brand-muted font-mono">Compatível com Paper/Spigot 1.8 - 1.20+</span>
-                    </div>
-                    <h2 class="text-2xl font-black text-white mb-2">${plugin.name}</h2>
-                    <p class="text-brand-muted text-sm mb-6">${plugin.shortDesc}</p>
-
-                    <div class="space-y-4 text-sm">
-                        <div>
-                            <h4 class="font-bold text-white mb-2 flex items-center gap-2">
-                                <i data-lucide="check-circle-2" class="w-4 h-4 text-[var(--brand-color,#f59e0b)]"></i> Principais Recursos
-                            </h4>
-                            <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-brand-muted text-xs">
-                                ${(plugin.features || []).map(f => `<li class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-[var(--brand-color,#f59e0b)]"></span>${f}</li>`).join('')}
-                            </ul>
-                        </div>
-
-                        <div>
-                            <h4 class="font-bold text-white mb-2 flex items-center gap-2">
-                                <i data-lucide="terminal" class="w-4 h-4 text-cyan-400"></i> Comandos
-                            </h4>
-                            <div class="flex flex-wrap gap-2">
-                                ${(plugin.commands || []).map(c => `<code class="bg-slate-900 border border-brand-border text-cyan-300 px-2 py-1 rounded text-xs font-mono">${c}</code>`).join('')}
-                            </div>
-                        </div>
-
-                        <div>
-                            <h4 class="font-bold text-white mb-2 flex items-center gap-2">
-                                <i data-lucide="layers" class="w-4 h-4 text-emerald-400"></i> Dependências
-                            </h4>
-                            <div class="flex flex-wrap gap-2">
-                                ${(plugin.dependencies || []).map(d => `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded text-xs">${d}</span>`).join('')}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mt-8 pt-6 border-t border-brand-border flex items-center justify-between">
-                        <div>
-                            <span class="text-xs text-brand-muted block uppercase">Valor</span>
-                            <span class="text-2xl font-black text-white font-mono">${isFree ? 'GRÁTIS' : `R$ ${Number(plugin.price).toFixed(2).replace('.', ',')}`}</span>
-                        </div>
-                        <button onclick="addToCart('${plugin.id}'); closeModal();" class="px-6 py-3 rounded-xl bg-[var(--brand-color,#f59e0b)] hover:opacity-90 text-slate-950 font-bold text-sm shadow-glow-gold transition-all">
-                            ${isFree ? 'Baixar Grátis' : 'Adicionar ao Carrinho'}
-                        </button>
-                    </div>
-                `;
-            }
-
-            const modal = document.getElementById('pluginModal');
-            if (modal) modal.classList.remove('hidden');
-            if (window.lucide) lucide.createIcons();
-        }
-
-        function closeModal() {
-            const modal = document.getElementById('pluginModal');
-            if (modal) modal.classList.add('hidden');
-        }
-
-        // ADMIN FUNCS
-        function openAdminModal() {
-            const modal = document.getElementById('adminModal');
-            if (modal) modal.classList.remove('hidden');
-
-            const settings = appState.settings || {};
-            const nameInput = document.getElementById('cfgStoreName');
-            const colorInput = document.getElementById('cfgBrandColor');
-            const colorText = document.getElementById('cfgBrandColorText');
-            const logoInput = document.getElementById('cfgLogoUrl');
-            const discordInput = document.getElementById('cfgDiscord');
-            const titleInput = document.getElementById('cfgHeroTitle');
-            const subInput = document.getElementById('cfgHeroSubtitle');
-
-            if (nameInput) nameInput.value = settings.storeName || 'TsLPlugins';
-            if (colorInput) colorInput.value = settings.brandColor || '#f59e0b';
-            if (colorText) colorText.value = settings.brandColor || '#f59e0b';
-            if (logoInput) logoInput.value = settings.logoUrl || '';
-            if (discordInput) discordInput.value = settings.discordUrl || 'https://discord.gg';
-            if (titleInput) titleInput.value = settings.heroTitle || '';
-            if (subInput) subInput.value = settings.heroSubtitle || '';
-
-            // Sincroniza color input com text
-            if (colorInput && colorText) {
-                colorInput.oninput = (e) => colorText.value = e.target.value;
-                colorText.oninput = (e) => colorInput.value = e.target.value;
-            }
-
-            renderAdminPluginsTable();
-            if (window.lucide) lucide.createIcons();
-        }
-
-        function closeAdminModal() {
-            const modal = document.getElementById('adminModal');
-            if (modal) modal.classList.add('hidden');
-        }
-
-        function verifyAdminPin() {
-            const pinInput = document.getElementById('adminPinInput');
-            if (pinInput && pinInput.value === '1234') {
-                bypassAdminPin();
-            } else {
-                showToast('PIN Incorreto! Tente 1234');
-            }
-        }
-
-        function bypassAdminPin() {
-            const auth = document.getElementById('adminAuthScreen');
-            const dash = document.getElementById('adminDashboard');
-            if (auth) auth.classList.add('hidden');
-            if (dash) dash.classList.remove('hidden');
-            renderAdminPluginsTable();
-            if (window.lucide) lucide.createIcons();
-        }
-
-        function switchAdminTab(tabId) {
-            document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.admin-tab-btn').forEach(btn => btn.className = 'admin-tab-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-brand-muted hover:text-white text-left');
-
-            const targetTab = document.getElementById(tabId);
-            const targetBtn = document.getElementById(`tab-${tabId}`);
-
-            if (targetTab) targetTab.classList.remove('hidden');
-            if (targetBtn) targetBtn.className = 'admin-tab-btn active w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-white bg-brand-surface border border-brand-border text-left';
-        }
-
-        function renderAdminPluginsTable() {
-            const tbody = document.getElementById('adminPluginsTable');
-            if (!tbody) return;
-            tbody.innerHTML = '';
-
-            (appState.plugins || []).forEach(p => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="p-3.5 font-bold text-white">${p.name}</td>
-                    <td class="p-3.5"><span class="px-2 py-0.5 rounded bg-brand-card border border-brand-border text-xs uppercase">${p.category}</span></td>
-                    <td class="p-3.5 font-mono ${p.price === 0 ? 'text-emerald-400' : 'text-[var(--brand-color,#f59e0b)]'}">${p.price === 0 ? 'GRÁTIS' : `R$ ${Number(p.price).toFixed(2)}`}</td>
-                    <td class="p-3.5 text-right flex justify-end gap-2">
-                        <button onclick="editPlugin('${p.id}')" class="p-1.5 rounded-lg bg-brand-card border border-brand-border text-[var(--brand-color,#f59e0b)] hover:border-brand-gold"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
-                        <button onclick="deletePlugin('${p.id}')" class="p-1.5 rounded-lg bg-brand-card border border-brand-border text-red-400 hover:border-red-400"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-            if (window.lucide) lucide.createIcons();
-        }
-
-        function openPluginForm() {
-            document.getElementById('formPluginId').value = '';
-            document.getElementById('formName').value = '';
-            document.getElementById('formCategory').value = 'economia';
-            document.getElementById('formPrice').value = '';
-            document.getElementById('formBadge').value = '';
-            document.getElementById('formShortDesc').value = '';
-            document.getElementById('formCommands').value = '';
-            document.getElementById('formDeps').value = '';
-            document.getElementById('formFeatures').value = '';
-
-            const formContainer = document.getElementById('pluginFormContainer');
-            if (formContainer) formContainer.classList.remove('hidden');
-        }
-
-        function closePluginForm() {
-            const formContainer = document.getElementById('pluginFormContainer');
-            if (formContainer) formContainer.classList.add('hidden');
-        }
-
-        function editPlugin(id) {
-            const plugin = appState.plugins.find(p => p.id === id);
-            if (!plugin) return;
-
-            document.getElementById('formPluginId').value = plugin.id;
-            document.getElementById('formName').value = plugin.name;
-            document.getElementById('formCategory').value = plugin.category;
-            document.getElementById('formPrice').value = plugin.price;
-            document.getElementById('formBadge').value = plugin.badge || '';
-            document.getElementById('formShortDesc').value = plugin.shortDesc;
-            document.getElementById('formCommands').value = plugin.commands ? plugin.commands.join(', ') : '';
-            document.getElementById('formDeps').value = plugin.dependencies ? plugin.dependencies.join(', ') : '';
-            document.getElementById('formFeatures').value = plugin.features ? plugin.features.join(', ') : '';
-
-            const formContainer = document.getElementById('pluginFormContainer');
-            if (formContainer) formContainer.classList.remove('hidden');
-        }
-
-        function savePluginFromForm() {
-            const id = document.getElementById('formPluginId').value;
-            const name = document.getElementById('formName').value.trim();
-            const category = document.getElementById('formCategory').value;
-            const price = parseFloat(document.getElementById('formPrice').value) || 0;
-            const badge = document.getElementById('formBadge').value.trim() || null;
-            const shortDesc = document.getElementById('formShortDesc').value.trim();
-            const commands = document.getElementById('formCommands').value.split(',').map(s => s.trim()).filter(Boolean);
-            const dependencies = document.getElementById('formDeps').value.split(',').map(s => s.trim()).filter(Boolean);
-            const features = document.getElementById('formFeatures').value.split(',').map(s => s.trim()).filter(Boolean);
-
-            if (!name || !shortDesc) {
-                showToast('Preencha o Nome e a Descrição Curta!');
-                return;
-            }
-
-            if (id) {
-                const index = appState.plugins.findIndex(p => p.id === id);
-                if (index !== -1) {
-                    appState.plugins[index] = { ...appState.plugins[index], name, category, price, badge, shortDesc, commands, dependencies, features };
-                }
-            } else {
-                appState.plugins.push({
-                    id: 'tsl-' + Date.now(),
-                    name, category, price, rating: 5.0, badge, shortDesc, commands, permissions: ['tsl.user'], dependencies, features
-                });
-            }
-
-            saveState();
-            closePluginForm();
-            showToast('Plugin salvo com sucesso!');
-        }
-
-        function deletePlugin(id) {
-            if (confirm('Tem certeza que deseja remover este plugin?')) {
-                appState.plugins = appState.plugins.filter(p => p.id !== id);
-                saveState();
-                showToast('Plugin removido!');
-            }
-        }
-
-        function saveSiteSettings() {
-            const nameInput = document.getElementById('cfgStoreName');
-            const colorInput = document.getElementById('cfgBrandColorText');
-            const logoInput = document.getElementById('cfgLogoUrl');
-            const discordInput = document.getElementById('cfgDiscord');
-            const titleInput = document.getElementById('cfgHeroTitle');
-            const subInput = document.getElementById('cfgHeroSubtitle');
-
-            if (!appState.settings) appState.settings = {};
-            appState.settings.storeName = nameInput ? nameInput.value.trim() : 'TsLPlugins';
-            appState.settings.brandColor = colorInput ? colorInput.value.trim() : '#f59e0b';
-            appState.settings.logoUrl = logoInput ? logoInput.value.trim() : '';
-            appState.settings.discordUrl = discordInput ? discordInput.value.trim() : 'https://discord.gg';
-            appState.settings.heroTitle = titleInput ? titleInput.value.trim() : '';
-            appState.settings.heroSubtitle = subInput ? subInput.value.trim() : '';
-
-            saveState();
-            showToast('Configurações de marca e cores salvas!');
-        }
-
-        function resetToDefaults() {
-            if (confirm('Isso resetará a loja para as configurações originais de fábrica. Continuar?')) {
-                appState = JSON.parse(JSON.stringify(defaultState));
-                localStorage.removeItem('tsl_app_state');
-                location.reload();
-            }
-        }
-
-        function toggleFaq(button) {
-            const content = button.nextElementSibling;
-            const icon = button.querySelector('i');
-            if (content) {
-                content.classList.toggle('hidden');
-                if (icon) {
-                    icon.style.transform = content.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
-                }
-            }
-        }
-
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobileMenu');
-            if (menu) menu.classList.toggle('hidden');
-        }
-
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toastMsg');
-            if (!toast || !toastMsg) return;
-
-            toastMsg.innerText = message;
-            toast.classList.remove('toast-enter');
-            toast.classList.add('toast-show');
-
-            setTimeout(() => {
-                toast.classList.remove('toast-show');
-                toast.classList.add('test-enter');
-            }, 3000);
-        }
-    </script>
+  </main>
+
+  <!-- Rodapé -->
+  <footer class="border-t border-brand-border bg-brand-bg py-8 mt-12">
+    <div class="max-w-7xl mx-auto px-4 text-center md:text-left text-sm text-gray-500 flex flex-col md:flex-row justify-between items-center gap-4">
+      <div>&copy; 2026 TsLPlugins. Todos os direitos reservados.</div>
+      <div class="flex space-x-6">
+        <button onclick="switchView('docs')" class="hover:text-brand-accent">Documentação</button>
+        <button onclick="openAdminLogin()" class="hover:text-brand-accent">Painel Admin</button>
+      </div>
+    </div>
+  </footer>
+  <script>
+    let plugins = JSON.parse(localStorage.getItem('tsl_plugins')) || [
+      { id: '1', name: 'TsL-Rankup', price: 49.90, desc: 'Sistema completo de Rankup com minas dinâmicas.', category: 'Sistemas', version: '2.1.0' },
+      { id: '2', name: 'TsL-Factions', price: 79.90, desc: 'Factions com guerras, terrenos e proteção anti-bug.', category: 'PvP', version: '1.0.4' }
+    ];
+
+    function switchView(view) {
+      document.getElementById('view-store').classList.add('hidden');
+      document.getElementById('view-docs').classList.add('hidden');
+      document.getElementById('view-client').classList.add('hidden');
+      document.getElementById('view-' + view).classList.remove('hidden');
+    }
+
+    function renderPlugins() {
+      const grid = document.getElementById('plugin-grid');
+      grid.innerHTML = plugins.map(p => `
+        <div class="bg-brand-card border border-brand-border rounded-2xl p-6 hover:border-brand-accent transition">
+          <span class="text-xs bg-brand-accent/10 border border-brand-accent/30 text-brand-accent px-2.5 py-1 rounded-full font-bold">${p.category}</span>
+          <h3 class="text-xl font-bold text-white mt-3">${p.name}</h3>
+          <p class="text-gray-400 text-sm mt-2 mb-4">${p.desc}</p>
+          <div class="flex justify-between items-center pt-4 border-t border-brand-border">
+            <span class="font-mono text-lg font-bold text-brand-accent">R$ ${p.price.toFixed(2)}</span>
+            <button class="bg-brand-accent text-black font-bold px-4 py-2 rounded-xl text-sm hover:bg-brand-accentHover transition">Comprar</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openAdminLogin() {
+      const pass = prompt("Digite a senha do Painel Admin:");
+      if (pass === (localStorage.getItem('tsl_admin_pass') || '1234')) {
+        alert("Acesso Autorizado!");
+      } else if (pass) {
+        alert("Senha incorreta!");
+      }
+    }
+
+    renderPlugins();
+  </script>
 </body>
 </html>
