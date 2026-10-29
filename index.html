@@ -1,53 +1,70 @@
-<!DOCTYPE html>
-<html lang="pt-BR" class="dark scroll-smooth">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TsLPlugins - A Loja #1 de Plugins para Minecraft</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Fonts: Inter & JetBrains Mono -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+ <!-- Categorias / Filtros -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4 bg-slate-900/50 p-4 rounded-2xl border border-slate-800">
+        
+        <!-- Botões de Filtro por Tipo -->
+        <div class="flex flex-wrap gap-2 w-full md:w-auto" id="filter-buttons">
+          <button onclick="filterPlugins('all')" class="filter-btn active px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 bg-purple-600 text-white shadow-lg shadow-purple-500/25">
+            Todos
+          </button>
+          <button onclick="filterPlugins('pago')" class="filter-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white">
+            <i class="fas me-1.5 fa-tag text-purple-400"></i>Pagos
+          </button>
+          <button onclick="filterPlugins('free')" class="filter-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white">
+            <i class="fas me-1.5 fa-gift text-emerald-400"></i>Grátis (Free)
+          </button>
+          <button onclick="filterPlugins('destaque')" class="filter-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white">
+            <i class="fas me-1.5 fa-star text-amber-400"></i>Destaque / Promo
+          </button>
+        </div>
 
+        <!-- Campo de Busca -->
+        <div class="relative w-full md:w-72">
+          <input type="text" id="search-input" oninput="applyFilters()" placeholder="Buscar plugin..." class="w-full bg-slate-950 text-slate-200 text-sm rounded-xl pl-10 pr-4 py-2.5 border border-slate-800 focus:outline-none focus:border-purple-500 transition-colors">
+          <i class="fas fa-search absolute left-3.5 top-3 text-slate-500 text-sm"></i>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Script de Lógica do Filtro -->
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            bg: '#0b0e14',
-                            surface: '#121721',
-                            card: '#181e2b',
-                            border: '#242d3e',
-                            hover: '#2e394e',
-                            gold: '#f59e0b',
-                            goldHover: '#d97706',
-                            goldGlow: 'rgba(245, 158, 11, 0.15)',
-                            emerald: '#10b981',
-                            cyan: '#06b6d4',
-                            muted: '#94a3b8'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    },
-                    boxShadow: {
-                        'glow-gold': '0 0 25px -5px rgba(245, 158, 11, 0.3)',
-                        'glow-cyan': '0 0 20px -5px rgba(6, 182, 212, 0.3)',
-                        'card-depth': '0 10px 30px -10px rgba(0,0,0,0.5)',
-                    }
-                }
-            }
-        }
+      let currentTypeFilter = 'all';
+
+      function filterPlugins(type) {
+        currentTypeFilter = type;
+        
+        // Atualiza estado dos botões de filtro
+        const buttons = document.querySelectorAll('.filter-btn');
+        buttons.forEach(btn => {
+          btn.classList.remove('bg-purple-600', 'text-white', 'shadow-lg', 'shadow-purple-500/25');
+          btn.classList.add('bg-slate-800', 'text-slate-300');
+        });
+
+        event.currentTarget.classList.remove('bg-slate-800', 'text-slate-300');
+        event.currentTarget.classList.add('bg-purple-600', 'text-white', 'shadow-lg', 'shadow-purple-500/25');
+
+        applyFilters();
+      }
+
+      function applyFilters() {
+        const searchQuery = document.getElementById('search-input').value.toLowerCase();
+        const cards = document.querySelectorAll('[data-plugin-card]');
+
+        cards.forEach(card => {
+          const pluginType = card.getAttribute('data-type'); // 'pago', 'free', 'destaque'
+          const pluginName = card.getAttribute('data-name').toLowerCase();
+
+          const matchesType = (currentTypeFilter === 'all') || (pluginType === currentTypeFilter);
+          const matchesSearch = pluginName.includes(searchQuery);
+
+          if (matchesType && matchesSearch) {
+            card.classList.remove('hidden');
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+      }
     </script>
 
     <style>
@@ -132,6 +149,11 @@
                     <span id="cartCount" class="absolute -top-1.5 -right-1.5 bg-brand-gold text-slate-950 text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center scale-0 transition-transform">0</span>
                 </button>
 
+                <!-- PAINEL ADMIN BUTTON -->
+                <button onclick="openAdminModal()" class="flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-brand-gold/10 border border-brand-gold/30 hover:bg-brand-gold hover:text-slate-950 text-brand-gold font-bold text-xs sm:text-sm transition-all shadow-glow-gold">
+                    <i data-lucide="shield-check" class="w-4 h-4"></i> Painel Admin
+                </button>
+
                 <!-- MINHA CONTA -->
                 <button onclick="showToast('Sistema de Autenticação Spigot/Discord em breve!')" class="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-surface border border-brand-border hover:border-slate-500 text-sm font-semibold text-slate-200 hover:text-white transition-all">
                     <i data-lucide="user" class="w-4 h-4 text-brand-gold"></i> Minha Conta
@@ -151,6 +173,9 @@
             <a href="#recursos" onclick="toggleMobileMenu()" class="block text-slate-300 hover:text-brand-gold py-1">Diferenciais</a>
             <a href="#depoimentos" onclick="toggleMobileMenu()" class="block text-slate-300 hover:text-brand-gold py-1">Depoimentos</a>
             <a href="#faq" onclick="toggleMobileMenu()" class="block text-slate-300 hover:text-brand-gold py-1">FAQ</a>
+            <button onclick="openAdminModal(); toggleMobileMenu();" class="flex items-center gap-2 text-brand-gold font-bold py-1">
+                <i data-lucide="shield-check" class="w-4 h-4"></i> Painel Admin
+            </button>
             <a href="https://discord.gg" target="_blank" class="flex items-center gap-2 text-indigo-400 py-1">
                 <i data-lucide="disc" class="w-4 h-4"></i> Discord
             </a>
@@ -296,32 +321,4 @@
     <section id="depoimentos" class="py-20 bg-brand-bg border-t border-brand-border/40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-2xl mx-auto mb-16">
-                <span class="text-brand-gold font-mono text-sm font-semibold uppercase">Prova Social</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">Quem utiliza recomenda</h2>
-                <p class="text-brand-muted mt-2">Veja a opinião de donos de redes e gestores de servidores.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Depoimento 1 -->
-                <div class="p-6 rounded-2xl bg-brand-surface border border-brand-border flex flex-col justify-between">
-                    <p class="text-slate-300 text-sm italic mb-6">
-                        "Substituímos todo o sistema de economia antigo pelo TsL-Economy na nossa rede com 350+ players simultâneos. O TPS estabilizou em 20.0 imediatamente. Vale cada centavo!"
-                    </p>
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-slate-800 border border-amber-500/30 flex items-center justify-center text-brand-gold font-bold font-mono">
-                            RK
-                        </div>
-                        <div>
-                            <div class="text-sm font-bold text-white">Raikou_</div>
-                            <div class="text-xs text-brand-muted">Fundador da Rede Legacy</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Depoimento 2 -->
-                <div class="p-6 rounded-2xl bg-brand-surface border border-brand-border flex flex-col justify-between">
-                    <p class="text-slate-300 text-sm italic mb-6">
-                        "O TsL-AntiCheat foi o único que realmente barrou os clientes de hack customizados no nosso servidor de Facções. O suporte no Discord responde em questão de minutos!"
-                    </p>
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-slate-800 border border-cyan-500/30 flex items-center justify-center text-cyan-400 font-bold font-mono">
+              
