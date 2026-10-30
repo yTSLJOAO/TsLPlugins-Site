@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="site-title-tag">AquaPlugins - A Melhor Loja de Plugins</title>
+  <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH5woWESYqNq01qAAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLR0HAAABU0lEQVQ4y2NgGAWjYBSMgkEACwUGBgYGZiYmJgzc3NwMKioqAot///79z58//3/+/Pl/dXV1f3NzczA0Njb+f//+/X8MDAz/gYGBYf///4+YmZmRxs/P7w8UA00N9vcPZqYGhvtAQEAnMDAQq8PExMQElA1NDWjF/PnzM9jb2w9mYmJiAHF7bKxLJiYmxH379oGNjY0JIsT08PAg09fXv5ifn28CUXV1dfkLwNzc/A+ow/Pnz88ArL9//34CdnFw8ICpv78/iJub2z8GBgaGQFdXlx5Q//79+wFxfv78+ePk5OSC9f///wPIB2BqauoPIKioqAjM7du3f5iZmRn///v3D9jU1PTPzc0NYOjj4/PPo6CgAG7B/v37A/r37w+gDqAA+DkwcAbI/Pnzh7KysgL9/fv37/nz549hYWGBmJiYAHZxcXGAsrKSAu7379//P8PDw/9///4Dw6gEAMDl+4oMUn3wAAAAAElFTkSuQmCC">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { brand: { accent: 'var(--brand-accent, #0096ff)' } }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root { --brand-accent: #0096ff; }
+    body { background-color: #fcfbfa; color: #1f293d; font-family: 'Inter', sans-serif; }
+    input, select, textarea { color: #1f293d !important; background-color: #ffffff !important; border-color: #e5e7eb !important; }
+    .custom-scroll::-webkit-scrollbar { width: 6px; }
+    .custom-scroll::-webkit-scrollbar-track { background: #fcfbfa; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+  </style>
+</head>
+<body class="bg-[#fcfbfa] min-h-screen flex flex-col">
+  <!-- Navbar -->
+  <header class="border-b border-gray-200 bg-white/90 backdrop-blur sticky top-0 z-40 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="switchView('store')">
+        <div id="nav-logo-container" class="w-10 h-10 rounded-xl bg-sky-100 border border-sky-300 flex items-center justify-center text-sky-600 font-bold text-xl overflow-hidden">
+          <i class="fa-solid fa-droplet" id="nav-logo-icon"></i>
+        </div>
+        <span class="text-2xl font-extrabold tracking-wider text-gray-900" id="nav-brand-text">Aqua<span class="text-sky-500">Plugins</span></span>
+      </div>
+
+      <nav class="hidden md:flex items-center space-x-8 font-medium text-gray-600">
+        <button onclick="switchView('store')" class="hover:text-sky-600 transition">Início</button>
+        <button onclick="switchView('store')" class="hover:text-sky-600 transition">Loja</button>
+        <button onclick="switchView('docs')" class="hover:text-sky-600 transition">Documentação</button>
+        <button onclick="switchView('client')" class="hover:text-sky-600 transition">Painel do Cliente</button>
+      </nav>
+
+      <div class="flex items-center space-x-4">
+        <div id="user-nav-area">
+          <button onclick="openAuthModal()" class="px-5 py-2.5 rounded-xl bg-sky-500 text-white font-bold text-sm hover:bg-sky-600 transition shadow-sm">
+            Entrar / Registrar
+          </button>
+        </div>
+        <div id="admin-btn-container"></div>
+      </div>
+    </div>
+  </header>
+  <!-- View principal: LOJA -->
+  <main id="view-store" class="flex-grow max-w-7xl mx-auto px-4 py-8 w-full space-y-10">
+    <div class="max-w-2xl mx-auto w-full">
+      <div class="relative">
+        <span class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
+          <i class="fa-solid fa-search"></i>
+        </span>
+        <input type="text" id="search-input" oninput="renderPlugins()" placeholder="Procurando por algum plugin específico?" class="w-full bg-white border border-gray-200 rounded-2xl pl-11 pr-4 py-3.5 text-sm focus:border-sky-500 outline-none text-gray-800 shadow-xs">
+      </div>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="relative rounded-3xl border border-sky-100 bg-gradient-to-br from-sky-50/80 via-sky-50/30 to-cyan-50/40 p-8 md:p-12 overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8 shadow-xs">
+      <div class="max-w-xl space-y-4">
+        <h1 id="hero-title-display" class="text-3xl md:text-5xl font-black text-gray-900 leading-tight">A inovação está nos detalhes.</h1>
+        <p id="hero-desc-display" class="text-gray-600 text-base leading-relaxed">Qualidade e praticidade para o seu servidor Minecraft. Plugins otimizados com foco total em performance e anti-lag.</p>
+        <div class="pt-2">
+          <button onclick="switchView('docs')" class="px-6 py-3 bg-sky-500 hover:bg-sky-600 text-white rounded-xl font-bold transition shadow-sm">
+            Explorar plugins
+          </button>
+        </div>
+      </div>
+      <div id="hero-image-container" class="w-24 h-24 md:w-32 md:h-32 rounded-3xl bg-sky-100 border border-sky-200 flex items-center justify-center text-sky-500 text-5xl md:text-6xl shadow-inner overflow-hidden">
+        <i class="fa-solid fa-cubes"></i>
+      </div>
+    </div>
+
+    <!-- Seção Plugins -->
+    <div class="space-y-6">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4 border-b border-gray-200 pb-4">
+        <h2 class="text-2xl font-black text-gray-900">Plugins</h2>
+        <div class="flex flex-wrap gap-2">
+          <button onclick="filterType('todos')" class="type-btn px-4 py-2 rounded-xl text-xs font-bold border border-sky-300 bg-sky-50 text-sky-700 transition" data-type="todos">Todos</button>
+          <button onclick="filterType('destaque')" class="type-btn px-4 py-2 rounded-xl text-xs font-bold border border-gray-200 bg-white text-gray-700 hover:border-sky-300 transition" data-type="destaque"><i class="fa-solid fa-star text-amber-500 mr-1"></i> Destaques</button>
+          <button onclick="filterType('pago')" class="type-btn px-4 py-2 rounded-xl text-xs font-bold border border-gray-200 bg-white text-gray-700 hover:border-sky-300 transition" data-type="pago">Plugins Pagos</button>
+          <button onclick="filterType('free')" class="type-btn px-4 py-2 rounded-xl text-xs font-bold border border-gray-200 bg-white text-gray-700 hover:border-sky-300 transition" data-type="free">Utilidades</button>
+        </div>
+      </div>
+      <div id="plugin-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </div>
+
+    <!-- Sobre a Loja -->
+    <div class="bg-white border border-gray-200 p-8 rounded-3xl space-y-4 shadow-xs">
+      <h3 class="text-xl font-bold text-gray-900" id="footer-about-title">Sobre a AquaPlugins</h3>
+      <p id="footer-about-desc" class="text-sm text-gray-600 leading-relaxed">
+        A equipe AquaPlugins trabalha para oferecer plugins de qualidade para servidores Minecraft. Nosso foco é desenvolver soluções práticas, com atenção à segurança, desempenho e suporte. Cada projeto é pensado para facilitar o dia a dia de quem administra um servidor.
+      </p>
+    </div>
+
+    <!-- FAQ -->
+    <div class="space-y-6 pt-4 border-t border-gray-200">
+      <h2 class="text-2xl font-bold text-gray-900">Perguntas Frequentes (FAQ)</h2>
+      <div id="faq-container" class="space-y-3"></div>
+    </div>
+  </main>
+  <!-- View: DOCUMENTAÇÃO -->
+  <main id="view-docs" class="hidden flex-grow max-w-7xl mx-auto px-4 py-8 w-full">
+    <div class="flex flex-col md:flex-row gap-8 min-h-[600px]">
+      <aside class="w-full md:w-64 border-r border-gray-200 pr-4 space-y-4">
+        <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Documentações</h3>
+        <ul class="space-y-1 text-sm" id="docs-sidebar-list"></ul>
+      </aside>
+      <section class="flex-1 bg-white border border-gray-200 rounded-3xl p-6 md:p-8 shadow-xs">
+        <h1 class="text-3xl font-black text-gray-900 mb-2" id="doc-title">Selecione um tópico</h1>
+        <div class="text-gray-600 leading-relaxed space-y-4" id="doc-body">Selecione uma documentação ao lado.</div>
+      </section>
+    </div>
+  </main>
+
+  <!-- View: PAINEL DO CLIENTE -->
+  <main id="view-client" class="hidden flex-grow max-w-7xl mx-auto px-4 py-8 w-full">
+    <div class="bg-white border border-gray-200 rounded-3xl p-8 max-w-4xl mx-auto space-y-8 shadow-sm">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-gray-100 pb-6">
+        <div>
+          <h2 class="text-2xl font-black text-gray-900"><i class="fa-solid fa-user-gear text-sky-500 mr-2"></i> Painel do Cliente</h2>
+          <p class="text-sm text-gray-500 mt-1">Conectado como: <span id="client-username-display" class="text-sky-500 font-bold">Visitante</span></p>
+          <div id="client-role-badge" class="mt-2 inline-block"></div>
+        </div>
+        <div class="flex gap-4">
+          <div class="bg-gray-50 border border-gray-200 px-4 py-2.5 rounded-2xl text-center">
+            <span class="block text-xs text-gray-400 uppercase font-bold">Total Gasto</span>
+            <span id="client-total-spent" class="font-mono text-sky-500 font-bold">R$ 0,00</span>
+          </div>
+          <div class="bg-gray-50 border border-gray-200 px-4 py-2.5 rounded-2xl text-center">
+            <span class="block text-xs text-gray-400 uppercase font-bold">Plugins Adquiridos</span>
+            <span id="client-total-plugins" class="font-mono text-gray-800 font-bold">0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Configurar Conta -->
+      <div class="bg-sky-50/50 border border-sky-100 p-6 rounded-2xl space-y-4">
+        <h3 class="font-bold text-gray-900 text-base flex items-center gap-2"><i class="fa-solid fa-id-card text-sky-500"></i> Configurar Conta & Perfil</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div><label class="text-xs text-gray-600 font-bold block mb-1">Nome Completo</label><input type="text" id="cfg-realname" placeholder="Seu nome" class="w-full bg-white border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm text-gray-800"></div>
+          <div><label class="text-xs text-gray-600 font-bold block mb-1">Discord Tag</label><input type="text" id="cfg-discord" placeholder="discord#0000" class="w-full bg-white border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm text-gray-800"></div>
+          <div><label class="text-xs text-gray-600 font-bold block mb-1">Usuário do Minecraft</label><input type="text" id="cfg-mcuser" placeholder="Nick no MC" class="w-full bg-white border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm text-gray-800"></div>
+          <div><label class="text-xs text-gray-600 font-bold block mb-1">Nova Senha</label><input type="password" id="cfg-pass" placeholder="••••••••" class="w-full bg-white border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm text-gray-800"></div>
+        </div>
+        <button onclick="saveClientAccountSettings()" class="bg-sky-500 hover:bg-sky-600 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition shadow-sm">Salvar Alterações</button>
+      </div>
+
+      <!-- Gerenciamento de IPs -->
+      <div class="bg-gray-50 border border-gray-200 p-6 rounded-2xl space-y-3">
+        <h3 class="font-bold text-gray-900 text-base flex items-center gap-2"><i class="fa-solid fa-network-wired text-cyan-600"></i> IPs Numéricos Autorizados (Máximo 2)</h3>
+        <div class="flex gap-2 max-w-md">
+          <input type="text" id="ip-input-field" placeholder="Ex: 192.99.15.20" class="flex-1 bg-white border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm text-gray-800">
+          <button onclick="addClientIp()" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold px-4 py-2.5 rounded-xl text-sm transition">Adicionar IP</button>
+        </div>
+        <div id="client-ip-list" class="flex flex-wrap gap-2 pt-2"></div>
+      </div>
+
+      <div>
+        <h3 class="font-bold text-gray-900 mb-3 text-lg">Seus Plugins Liberados (.JAR)</h3>
+        <div id="client-licenses-list" class="space-y-3"><p class="text-sm text-gray-400">Faça login para ver seus ficheiros.</p></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Seção Entre em Contato -->
+  <section class="max-w-7xl mx-auto px-4 py-10 w-full space-y-4">
+    <div class="bg-white border border-gray-200 rounded-3xl p-8 shadow-xs space-y-4">
+      <h3 class="text-xl font-black text-gray-900">Entre em contato</h3>
+      <p class="text-sm text-gray-500">Em caso de dúvidas, críticas ou suporte, fale com a nossa equipe.</p>
+      <div class="flex flex-wrap gap-3 pt-1">
+        <a href="mailto:suporte@aquaplugins.com.br" class="px-5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-sm flex items-center gap-2 transition shadow-sm">
+          <i class="fa-solid fa-envelope"></i> E-mail
+        </a>
+        <a id="contact-discord-btn" href="https://discord.gg/" target="_blank" class="px-5 py-2.5 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white font-bold text-sm flex items-center gap-2 transition shadow-sm">
+          <i class="fa-brands fa-discord"></i> Canal do Discord
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Rodapé -->
+  <footer class="border-t border-gray-200 bg-white py-10 text-center text-xs text-gray-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
+      <div>
+        <p class="font-bold text-gray-800 text-sm">Copyright &copy; AquaPlugins</p>
+        <p class="text-gray-400 mt-0.5">Este site não possui quaisquer vínculos com a Mojang AB.</p>
+      </div>
+      <div class="flex gap-6 text-gray-600 font-medium">
+        <button onclick="switchView('store')" class="hover:text-sky-500">Início</button>
+        <button onclick="switchView('docs')" class="hover:text-sky-500">Suporte</button>
+        <button onclick="switchView('client')" class="hover:text-sky-500">Painel do Cliente</button>
+      </div>
+    </div>
+  </footer>
+  <!-- Modal Auth -->
+  <div id="auth-modal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white border border-gray-200 rounded-3xl w-full max-w-md p-8 space-y-5 shadow-xl">
+      <div class="flex justify-between items-center border-b border-gray-100 pb-4">
+        <h3 class="font-bold text-gray-900 text-lg flex items-center gap-2"><i class="fa-solid fa-lock text-sky-500"></i> Portal de Acesso Aqua</h3>
+        <button onclick="closeAuthModal()" class="text-gray-400 hover:text-gray-700"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+      <div class="flex border-b border-gray-200 mb-2">
+        <button onclick="toggleAuthTab('login')" id="tab-btn-login" class="flex-1 py-2 font-bold text-sm border-b-2 border-sky-500 text-sky-500">Entrar</button>
+        <button onclick="toggleAuthTab('register')" id="tab-btn-register" class="flex-1 py-2 font-bold text-sm border-b-2 border-transparent text-gray-400">Criar Conta</button>
+      </div>
+
+      <div id="auth-form-login" class="space-y-4">
+        <div><label class="text-xs text-gray-600 font-bold block mb-1">Usuário</label><input type="text" id="login-user" placeholder="Ex: yTSLJOAO" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800"></div>
+        <div><label class="text-xs text-gray-600 font-bold block mb-1">Senha</label><input type="password" id="login-pass" placeholder="••••••••" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800"></div>
+        <button onclick="performLogin()" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 rounded-xl transition shadow-md">Acessar Conta</button>
+      </div>
+
+      <div id="auth-form-register" class="hidden space-y-4">
+        <div><label class="text-xs text-gray-600 font-bold block mb-1">Definir Usuário</label><input type="text" id="reg-user" placeholder="Seu nick" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800"></div>
+        <div><label class="text-xs text-gray-600 font-bold block mb-1">Definir Senha</label><input type="password" id="reg-pass" placeholder="Mínimo 4 caracteres" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800"></div>
+        <button onclick="performRegister()" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 rounded-xl transition shadow-md">Registrar e Entrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Admin -->
+  <div id="admin-modal" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white border border-gray-200 rounded-3xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden shadow-2xl">
+      <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+        <h3 class="text-xl font-black text-gray-900 flex items-center gap-2"><i class="fa-solid fa-sliders text-sky-500"></i> Painel Admin</h3>
+        <button onclick="closeAdminModal()" class="text-gray-400 hover:text-gray-700"><i class="fa-solid fa-xmark text-xl"></i></button>
+      </div>
+      <div class="flex-1 flex flex-col md:flex-row overflow-hidden">
+        <div class="w-full md:w-56 border-r border-gray-200 p-4 space-y-1.5 bg-gray-50">
+          <button onclick="switchAdminTab('plugins')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-sm text-gray-700 hover:bg-sky-50 hover:text-sky-600 flex items-center gap-2"><i class="fa-solid fa-cube text-sky-500"></i> Plugins & Embeds</button>
+          <button onclick="switchAdminTab('webhooks')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-sm text-gray-700 hover:bg-sky-50 hover:text-sky-600 flex items-center gap-2"><i class="fa-brands fa-discord text-indigo-500"></i> Webhooks Discord</button>
+          <button onclick="switchAdminTab('appearance')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-sm text-gray-700 hover:bg-sky-50 hover:text-sky-600 flex items-center gap-2"><i class="fa-solid fa-palette text-pink-500"></i> Logo, Cores & Links</button>
+          <button onclick="switchAdminTab('homecontent')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-sm text-gray-700 hover:bg-sky-50 hover:text-sky-600 flex items-center gap-2"><i class="fa-solid fa-pen-to-square text-sky-500"></i> Mensagens da Home</button>
+          <button onclick="switchAdminTab('admins')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-sm text-gray-700 hover:bg-sky-50 hover:text-sky-600 flex items-center gap-2"><i class="fa-solid fa-user-shield text-amber-500"></i> Contas Admin</button>
+          <button onclick="switchAdminTab('ranks')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-sm text-gray-700 hover:bg-sky-50 hover:text-sky-600 flex items-center gap-2"><i class="fa-solid fa-medal text-cyan-600"></i> Cargos por Gastos</button>
+          <button onclick="switchAdminTab('faqs')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-sm text-gray-700 hover:bg-sky-50 hover:text-sky-600 flex items-center gap-2"><i class="fa-solid fa-circle-question text-purple-500"></i> FAQs</button>
+          <button onclick="switchAdminTab('docs')" class="w-full text-left px-4 py-2.5 rounded-xl font-medium text-sm text-gray-700 hover:bg-sky-50 hover:text-sky-600 flex items-center gap-2"><i class="fa-solid fa-book text-gray-500"></i> Documentação</button>
+        </div>
+        <div class="flex-1 p-6 overflow-y-auto custom-scroll bg-white">
+          <!-- Aba Plugins Completo com Embeds Detalhados -->
+          <div id="admin-tab-plugins" class="space-y-6">
+            <h4 class="font-bold text-lg text-gray-900">Criar & Editar Plugins (Campos do Embed Discord)</h4>
+            <div class="bg-gray-50 border border-gray-200 p-5 rounded-2xl space-y-4">
+              <input type="hidden" id="p-id">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div><label class="text-xs text-gray-600 font-bold block mb-1">Nome do Plugin</label><input type="text" id="p-name" placeholder="Ex: AquaInvestimento" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800"></div>
+                <div><label class="text-xs text-gray-600 font-bold block mb-1">Categoria</label><input type="text" id="p-category" placeholder="Ex: Gestão, Economia, PvP" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800"></div>
+              </div>
+
+              <div class="grid grid-cols-3 gap-3">
+                <div><label class="text-xs text-gray-600 font-bold block mb-1">Preço (R$)</label><input type="number" step="0.01" id="p-price" placeholder="24.90" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800"></div>
+                <div><label class="text-xs text-gray-600 font-bold block mb-1">Tipo</label><select id="p-type" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800"><option value="pago">Pago</option><option value="free">Grátis / Utilidade</option></select></div>
+                <div><label class="text-xs text-gray-600 font-bold block mb-1">Versão do Plugin</label><input type="text" id="p-version" placeholder="Ex: 1.0.1" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800"></div>
+              </div>
+
+              <div><label class="text-xs text-gray-600 font-bold block mb-1">Versões do Minecraft Suportadas</label><input type="text" id="p-mcversions" placeholder="Ex: 1.8, 1.12, 1.16 - 1.21" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800"></div>
+
+              <div><label class="text-xs text-gray-600 font-bold block mb-1">Descrição Curta (Resumo)</label><input type="text" id="p-desc" placeholder="Resumo do plugin" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800"></div>
+
+              <div><label class="text-xs text-gray-600 font-bold block mb-1">Visão Geral Detalhada (Embed Novo Plugin)</label><textarea id="p-overview" rows="2" placeholder="Explicação detalhada sobre o funcionamento do plugin para o Discord" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800"></textarea></div>
+
+              <div><label class="text-xs text-gray-600 font-bold block mb-1">Atualizações / Changelog (Embed Nova Atualização)</label><textarea id="p-updatenotes" rows="2" placeholder="Ex: Adicionada opção para configurar nomes customizados..." class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800"></textarea></div>
+
+              <div><label class="text-xs text-gray-600 font-bold block mb-1">Link da Documentação (Para os Botões do Discord)</label><input type="text" id="p-docurl" placeholder="https://aquaplugins.com.br/docs/plugin" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800"></div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="p-4 bg-white border border-dashed border-sky-300 rounded-2xl">
+                  <label class="text-xs text-sky-600 font-bold block mb-1"><i class="fa-solid fa-image mr-1"></i> Imagem / Banner do Embed</label>
+                  <input type="file" id="p-logo-input" accept="image/*" class="w-full text-xs text-gray-600 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-sky-500 file:text-white">
+                </div>
+                <div class="p-4 bg-white border border-dashed border-sky-300 rounded-2xl">
+                  <label class="text-xs text-sky-600 font-bold block mb-1"><i class="fa-solid fa-file-arrow-up mr-1"></i> Ficheiro .JAR</label>
+                  <input type="file" id="p-file-input" accept=".jar" class="w-full text-xs text-gray-600 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-sky-500 file:text-white">
+                </div>
+              </div>
+              <p id="p-file-status" class="text-[11px] text-gray-400">Nenhum ficheiro jar carregado.</p>
+
+              <label class="flex items-center gap-2 text-sm text-gray-700 font-medium"><input type="checkbox" id="p-featured" class="rounded accent-sky-500 w-4 h-4"> Destaque no Início</label>
+              <button onclick="savePlugin()" class="bg-sky-500 hover:bg-sky-600 text-white font-bold px-5 py-3 rounded-xl text-sm w-full transition shadow-sm">Salvar Plugin & Publicar Embed</button>
+            </div>
+            <div id="admin-plugin-list" class="space-y-2"></div>
+          </div>
+
+          <!-- Aba Webhooks (URLs + Identidade Visual) -->
+          <div id="admin-tab-webhooks" class="hidden space-y-6">
+            <h4 class="font-bold text-lg text-gray-900">URLs das Webhooks do Discord (AquaPlugins)</h4>
+            <div class="bg-gray-50 border border-gray-200 p-5 rounded-2xl space-y-4">
+              <div><label class="text-xs text-emerald-600 font-bold block mb-1">1. Webhook de Vendas</label><input type="text" id="wh-sales" placeholder="https://discord.com/api/webhooks/..." class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800"></div>
+              <div><label class="text-xs text-cyan-600 font-bold block mb-1">2. Webhook de Novos Plugins (Canal #produtos)</label><input type="text" id="wh-plugins" placeholder="https://discord.com/api/webhooks/..." class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800"></div>
+              <div><label class="text-xs text-amber-600 font-bold block mb-1">3. Webhook de Atualizações (Canal #atualizações)</label><input type="text" id="wh-updates" placeholder="https://discord.com/api/webhooks/..." class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800"></div>
+              <div><label class="text-xs text-gray-600 font-bold block mb-1">Texto do Rodapé do Discord</label><input type="text" id="wh-footer-text" placeholder="AquaPlugins • aquaplugins.com.br" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800"></div>
+              <button onclick="saveWebhooks()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-6 py-3 rounded-xl text-sm transition w-full">Salvar Configurações de Webhooks</button>
+            </div>
+          </div>
+
+          <!-- Aba Aparência -->
+          <div id="admin-tab-appearance" class="hidden space-y-6">
+            <h4 class="font-bold text-lg text-gray-900">Logo Geral, Cores e Links</h4>
+            <div class="bg-gray-50 border border-gray-200 p-5 rounded-2xl space-y-4">
+              <div class="grid grid-cols-2 gap-4">
+                <div><label class="text-xs text-gray-600 font-bold block mb-1">Nome da Loja</label><input type="text" id="cfg-site-name" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800"></div>
+                <div><label class="text-xs text-gray-600 font-bold block mb-1">Cor Principal</label><input type="color" id="cfg-site-color" class="w-full h-11 bg-white border border-gray-200 rounded-xl p-1 cursor-pointer"></div>
+              </div>
+              <div>
+                <label class="text-xs text-gray-600 font-bold block mb-1">Logo Geral do Site (Arquivo ou URL)</label>
+                <input type="file" id="cfg-logo-file" accept="image/*" class="w-full text-xs text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-pink-600 file:text-white mb-2">
+                <input type="text" id="cfg-logo-url" placeholder="Ou URL da imagem" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800">
+              </div>
+              <div><label class="text-xs text-gray-600 font-bold block mb-1">Link do Discord</label><input type="text" id="cfg-discord-link" placeholder="https://discord.gg/..." class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800"></div>
+              <button onclick="saveAppearance()" class="bg-pink-600 hover:bg-pink-700 text-white font-bold px-6 py-3 rounded-xl text-sm transition">Salvar Aparência</button>
+            </div>
+          </div>
+
+          <!-- Aba Mensagens e Imagens do Site Principal -->
+          <div id="admin-tab-homecontent" class="hidden space-y-6">
+            <h4 class="font-bold text-lg text-gray-900">Alterar Mensagens & Imagens do Site Principal</h4>
+            <div class="bg-gray-50 border border-gray-200 p-5 rounded-2xl space-y-4">
+              <div><label class="text-xs text-gray-600 font-bold block mb-1">Título Principal (Hero)</label><input type="text" id="cfg-hero-title" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800"></div>
+              <div><label class="text-xs text-gray-600 font-bold block mb-1">Subtítulo / Descrição Principal (Hero)</label><textarea id="cfg-hero-desc" rows="2" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800"></textarea></div>
+              <div>
+                <label class="text-xs text-sky-600 font-bold block mb-1">Imagem / Ícone Ilustrativo do Hero</label>
+                <input type="file" id="cfg-hero-img-file" accept="image/*" class="w-full text-xs text-gray-600 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-sky-500 file:text-white mb-2">
+                <input type="text" id="cfg-hero-img-url" placeholder="Ou cole a URL da imagem do Hero" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800">
+              </div>
+              <hr class="border-gray-200">
+              <div><label class="text-xs text-gray-600 font-bold block mb-1">Título da Seção "Sobre"</label><input type="text" id="cfg-about-title" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800"></div>
+              <div><label class="text-xs text-gray-600 font-bold block mb-1">Texto da Seção "Sobre"</label><textarea id="cfg-about-desc" rows="3" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800"></textarea></div>
+              <button onclick="saveHomeContent()" class="bg-sky-500 hover:bg-sky-600 text-white font-bold px-6 py-3 rounded-xl text-sm transition">Salvar Alterações da Home</button>
+            </div>
+          </div>
+          <div id="admin-tab-admins" class="hidden space-y-6">
+            <h4 class="font-bold text-lg text-gray-900">Contas Admin</h4>
+            <div class="bg-gray-50 border border-gray-200 p-4 rounded-2xl flex gap-2">
+              <input type="text" id="new-admin-user" placeholder="Usuário (Ex: yTSLJOAO)" class="flex-1 bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800">
+              <button onclick="addAdminUser()" class="bg-amber-500 hover:bg-amber-600 text-white font-bold px-5 py-3 rounded-xl text-sm transition">Adicionar</button>
+            </div>
+            <div id="admin-users-list" class="space-y-2"></div>
+          </div>
+
+          <div id="admin-tab-ranks" class="hidden space-y-6">
+            <h4 class="font-bold text-lg text-gray-900">Cargos por Gastos</h4>
+            <div class="bg-gray-50 border border-gray-200 p-5 rounded-2xl space-y-3">
+              <input type="text" id="rank-id" placeholder="ID (Ex: vip)" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800">
+              <input type="text" id="rank-name" placeholder="Nome (Ex: VIP)" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800">
+              <input type="number" step="0.01" id="rank-min" placeholder="Mínimo R$" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800">
+              <button onclick="saveRank()" class="bg-cyan-600 hover:bg-cyan-700 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition">Salvar Cargo</button>
+            </div>
+            <div id="admin-ranks-list" class="space-y-2"></div>
+          </div>
+
+          <div id="admin-tab-faqs" class="hidden space-y-6">
+            <h4 class="font-bold text-lg text-gray-900">FAQs</h4>
+            <div class="bg-gray-50 border border-gray-200 p-5 rounded-2xl space-y-3">
+              <input type="hidden" id="faq-id">
+              <input type="text" id="faq-q" placeholder="Pergunta" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800">
+              <textarea id="faq-a" rows="3" placeholder="Resposta" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800"></textarea>
+              <button onclick="saveFaq()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition">Salvar FAQ</button>
+            </div>
+            <div id="admin-faq-list" class="space-y-2"></div>
+          </div>
+
+          <div id="admin-tab-docs" class="hidden space-y-6">
+            <h4 class="font-bold text-lg text-gray-900">Documentação</h4>
+            <div class="bg-gray-50 border border-gray-200 p-5 rounded-2xl space-y-3">
+              <input type="hidden" id="doc-id">
+              <input type="text" id="doc-input-title" placeholder="Título" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800">
+              <textarea id="doc-input-content" rows="4" placeholder="Conteúdo" class="w-full bg-white border border-gray-200 rounded-xl p-3 text-sm text-gray-800"></textarea>
+              <button onclick="saveDoc()" class="bg-sky-500 hover:bg-sky-600 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition">Salvar Doc</button>
+            </div>
+            <div id="admin-doc-list" class="space-y-2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    let selectedType = 'todos';
+    let uploadedJarData = null;
+    let uploadedPluginLogo = null;
+    let currentUser = JSON.parse(localStorage.getItem('tsl_logged_user')) || null;
+
+    let webhooks = JSON.parse(localStorage.getItem('tsl_webhooks')) || {
+      sales: '', plugins: '', updates: '',
+      footerText: 'AquaPlugins • aquaplugins.com.br'
+    };
+
+    let adminAccounts = JSON.parse(localStorage.getItem('tsl_admin_accounts')) || ['yTSLJOAO'];
+    let appearance = JSON.parse(localStorage.getItem('tsl_appearance')) || { name: 'AquaPlugins', color: '#0096ff', discordLink: 'https://discord.gg/', logoUrl: '' };
+    
+    let homeContent = JSON.parse(localStorage.getItem('tsl_homecontent')) || {
+      heroTitle: 'A inovação está nos detalhes.',
+      heroDesc: 'Qualidade e praticidade para o seu servidor Minecraft. Plugins otimizados com foco total em performance e anti-lag.',
+      heroImg: '',
+      aboutTitle: 'Sobre a AquaPlugins',
+      aboutDesc: 'A equipe AquaPlugins trabalha para oferecer plugins de qualidade para servidores Minecraft. Nosso foco é desenvolver soluções práticas, com atenção à segurança, desempenho e suporte. Cada projeto é pensado para facilitar o dia a dia de quem administra um servidor.'
+    };
+
+    let ranks = JSON.parse(localStorage.getItem('tsl_ranks')) || [
+      { id: 'vip', name: '⭐ Cliente VIP', minSpent: 50 },
+      { id: 'mvp', name: '💎 Cliente MVP', minSpent: 150 }
+    ];
+
+    let db = null;
+    const dbReq = indexedDB.open("TsLPluginsStoreDB", 1);
+    dbReq.onupgradeneeded = (e) => {
+      db = e.target.result;
+      if (!db.objectStoreNames.contains("pluginFiles")) db.createObjectStore("pluginFiles");
+    };
+    dbReq.onsuccess = (e) => { db = e.target.result; };
+
+    function storeJarInDB(pluginId, blob) {
+      return new Promise((resolve) => {
+        if (!db) return resolve();
+        const tx = db.transaction("pluginFiles", "readwrite");
+        const store = tx.objectStore("pluginFiles");
+        store.put(blob, pluginId);
+        tx.oncomplete = () => resolve();
+      });
+    }
+
+    function getJarFromDB(pluginId) {
+      return new Promise((resolve) => {
+        if (!db) return resolve(null);
+        const tx = db.transaction("pluginFiles", "readonly");
+        const store = tx.objectStore("pluginFiles");
+        const req = store.get(pluginId);
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => resolve(null);
+      });
+    }
+
+    let users = JSON.parse(localStorage.getItem('tsl_users')) || [
+      { user: 'yTSLJOAO', pass: 'Tsl3107@', realName: 'João Admin', discord: 'ytsljoao#0001', mcUser: 'yTSLJOAO', allAccess: true, ips: ['127.0.0.1'], purchased: ['1', '2'] }
+    ];
+
+    let plugins = JSON.parse(localStorage.getItem('tsl_plugins')) || [
+      { id: '1', name: 'AquaStackDrops', price: 24.90, category: 'Gestão', version: '1.0.1', mcVersions: '1.8 - 1.21', desc: 'Agrupe itens de maneira eficaz em seu servidor.', overview: 'Sistema inteligente de agrupamento dinâmico com otimização extrema.', updateNotes: 'Adicionada opção para configurar nomes customizados baseado nos materiais.', docUrl: 'https://aquaplugins.com.br/docs', type: 'pago', featured: true, jarFileName: 'AquaStackDrops.jar', logoUrl: '' }
+    ];
+
+    let docs = JSON.parse(localStorage.getItem('tsl_docs')) || [{ id: '1', title: 'Instalação Geral', content: 'Coloque o .jar na pasta /plugins.' }];
+    let faqs = JSON.parse(localStorage.getItem('tsl_faqs')) || [{ id: '1', q: 'Como funciona a ativação por IP?', a: 'Cadastre o IP no painel do cliente.' }];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const fileInput = document.getElementById('p-file-input');
+      if (fileInput) {
+        fileInput.addEventListener('change', (e) => {
+          const file = e.target.files[0];
+          if (file) {
+            uploadedJarData = file;
+            document.getElementById('p-file-status').innerText = `Ficheiro "${file.name}" pronto!`;
+          }
+        });
+      }
+
+      const pluginLogoInput = document.getElementById('p-logo-input');
+      if (pluginLogoInput) {
+        pluginLogoInput.addEventListener('change', (e) => {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (evt) => { uploadedPluginLogo = evt.target.result; };
+            reader.readAsDataURL(file);
+          }
+        });
+      }
+
+      applyAppearance();
+      applyHomeContent();
+      updateUserNav();
+      renderPlugins();
+      renderFaqs();
+    });
+
+    function applyAppearance() {
+      document.documentElement.style.setProperty('--brand-accent', appearance.color);
+      document.getElementById('site-title-tag').innerText = `${appearance.name} - Loja de Plugins`;
+      document.getElementById('nav-brand-text').innerHTML = `${appearance.name}<span style="color:${appearance.color}"></span>`;
+      
+      const discordBtn = document.getElementById('contact-discord-btn');
+      if (discordBtn && appearance.discordLink) discordBtn.href = appearance.discordLink;
+
+      const logoContainer = document.getElementById('nav-logo-container');
+      if (appearance.logoUrl) {
+        logoContainer.innerHTML = `<img src="${appearance.logoUrl}" class="w-full h-full object-cover">`;
+      } else {
+        logoContainer.innerHTML = `<i class="fa-solid fa-droplet" id="nav-logo-icon"></i>`;
+      }
+    }
+
+    function applyHomeContent() {
+      document.getElementById('hero-title-display').innerText = homeContent.heroTitle;
+      document.getElementById('hero-desc-display').innerText = homeContent.heroDesc;
+      document.getElementById('footer-about-title').innerText = homeContent.aboutTitle;
+      document.getElementById('footer-about-desc').innerText = homeContent.aboutDesc;
+
+      const heroImgContainer = document.getElementById('hero-image-container');
+      if (homeContent.heroImg) {
+        heroImgContainer.innerHTML = `<img src="${homeContent.heroImg}" class="w-full h-full object-cover rounded-3xl">`;
+      } else {
+        heroImgContainer.innerHTML = `<i class="fa-solid fa-cubes"></i>`;
+      }
+    }
+
+    function saveAppearance() {
+      appearance.name = document.getElementById('cfg-site-name').value.trim() || 'AquaPlugins';
+      appearance.color = document.getElementById('cfg-site-color').value || '#0096ff';
+      appearance.discordLink = document.getElementById('cfg-discord-link').value.trim() || 'https://discord.gg/';
+      
+      const logoUrlInput = document.getElementById('cfg-logo-url').value.trim();
+      if (logoUrlInput) {
+        appearance.logoUrl = logoUrlInput;
+        finishSavingAppearance();
+      } else {
+        const logoFile = document.getElementById('cfg-logo-file').files[0];
+        if (logoFile) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            appearance.logoUrl = e.target.result;
+            finishSavingAppearance();
+          };
+          reader.readAsDataURL(logoFile);
+        } else {
+          finishSavingAppearance();
+        }
+      }
+    }
+
+    function finishSavingAppearance() {
+      localStorage.setItem('tsl_appearance', JSON.stringify(appearance));
+      applyAppearance();
+      alert('Aparência atualizada com sucesso!');
+    }
+
+    function saveHomeContent() {
+      homeContent.heroTitle = document.getElementById('cfg-hero-title').value.trim() || homeContent.heroTitle;
+      homeContent.heroDesc = document.getElementById('cfg-hero-desc').value.trim() || homeContent.heroDesc;
+      homeContent.aboutTitle = document.getElementById('cfg-about-title').value.trim() || homeContent.aboutTitle;
+      homeContent.aboutDesc = document.getElementById('cfg-about-desc').value.trim() || homeContent.aboutDesc;
+
+      const heroUrl = document.getElementById('cfg-hero-img-url').value.trim();
+      if (heroUrl) {
+        homeContent.heroImg = heroUrl;
+        finishSavingHomeContent();
+      } else {
+        const heroFile = document.getElementById('cfg-hero-img-file').files[0];
+        if (heroFile) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            homeContent.heroImg = e.target.result;
+            finishSavingHomeContent();
+          };
+          reader.readAsDataURL(heroFile);
+        } else {
+          finishSavingHomeContent();
+        }
+      }
+    }
+
+    function finishSavingHomeContent() {
+      localStorage.setItem('tsl_homecontent', JSON.stringify(homeContent));
+      applyHomeContent();
+      alert('Mensagens e imagens da home atualizadas!');
+    }
+
+    function isAdmin(username) {
+      if (!username) return false;
+      return adminAccounts.map(a => a.toLowerCase()).includes(username.toLowerCase());
+    }
+
+    function sendDiscordWebhook(url, payload) {
+      if (!url) return;
+      fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }).catch(() => {});
+    }
+
+    function saveWebhooks() {
+      webhooks = {
+        sales: document.getElementById('wh-sales').value.trim(),
+        plugins: document.getElementById('wh-plugins').value.trim(),
+        updates: document.getElementById('wh-updates').value.trim(),
+        footerText: document.getElementById('wh-footer-text').value.trim() || 'AquaPlugins • aquaplugins.com.br'
+      };
+      localStorage.setItem('tsl_webhooks', JSON.stringify(webhooks));
+      alert('URLs das Webhooks do Discord salvas com sucesso!');
+    }
+
+    function switchView(view) {
+      document.getElementById('view-store').classList.add('hidden');
+      document.getElementById('view-docs').classList.add('hidden');
+      document.getElementById('view-client').classList.add('hidden');
+      document.getElementById('view-' + view).classList.remove('hidden');
+      if (view === 'docs') renderDocs();
+      if (view === 'client') renderClientArea();
+      if (view === 'store') renderFaqs();
+    }
+
+    function filterType(type) {
+      selectedType = type;
+      document.querySelectorAll('.type-btn').forEach(btn => {
+        btn.classList.remove('bg-sky-50', 'border-sky-300', 'text-sky-700');
+        btn.classList.add('bg-white', 'border-gray-200', 'text-gray-700');
+      });
+      event.currentTarget.classList.remove('bg-white', 'border-gray-200', 'text-gray-700');
+      event.currentTarget.classList.add('bg-sky-50', 'border-sky-300', 'text-sky-700');
+      renderPlugins();
+    }
+
+    function renderPlugins() {
+      const query = document.getElementById('search-input').value.toLowerCase();
+      const grid = document.getElementById('plugin-grid');
+      const filtered = plugins.filter(p => {
+        const matchesType = selectedType === 'todos' || (selectedType === 'destaque' && p.featured) || (p.type === selectedType);
+        const matchesQuery = p.name.toLowerCase().includes(query) || p.desc.toLowerCase().includes(query);
+        return matchesType && matchesQuery;
+      });
+
+      grid.innerHTML = filtered.map(p => `
+        <div class="bg-white border border-gray-200 rounded-3xl p-6 hover:border-sky-300 transition flex flex-col justify-between shadow-xs">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs px-2.5 py-1 rounded-full font-bold ${p.type === 'free' ? 'bg-cyan-100 text-cyan-800' : 'bg-sky-100 text-sky-800'}">${p.type.toUpperCase()}</span>
+              ${p.logoUrl ? `<img src="${p.logoUrl}" class="w-10 h-10 rounded-xl object-cover border border-gray-200 shadow-xs">` : `<div class="w-10 h-10 rounded-xl bg-sky-50 border border-sky-200 flex items-center justify-center text-sky-500 font-bold"><i class="fa-solid fa-droplet text-sm"></i></div>`}
+            </div>
+            <h3 class="text-xl font-bold text-gray-900">${p.name}</h3>
+            <p class="text-gray-500 text-sm mt-2 mb-4">${p.desc}</p>
+          </div>
+          <div class="flex justify-between items-center pt-4 border-t border-gray-100">
+            <span class="font-mono text-lg font-bold text-gray-900">${p.price > 0 ? 'R$ ' + p.price.toFixed(2) : 'GRÁTIS'}</span>
+            <button onclick="buyPlugin('${p.id}', '${p.name}', ${p.price})" class="bg-sky-500 hover:bg-sky-600 text-white font-bold px-4 py-2 rounded-xl text-sm transition shadow-sm">Adquirir</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderFaqs() {
+      const container = document.getElementById('faq-container');
+      container.innerHTML = faqs.map(f => `
+        <div class="bg-white border border-gray-200 p-5 rounded-2xl shadow-xs">
+          <h4 class="font-bold text-gray-900 text-sm mb-1"><i class="fa-solid fa-circle-question text-sky-500 mr-2"></i>${f.q}</h4>
+          <p class="text-xs text-gray-500 pl-6">${f.a}</p>
+        </div>
+      `).join('');
+    }
+
+    function buyPlugin(id, name, price) {
+      if (!currentUser) {
+        alert("Você precisa estar logado na sua conta para adquirir um plugin!");
+        openAuthModal();
+        return;
+      }
+      if (!currentUser.purchased) currentUser.purchased = [];
+      if (!currentUser.purchased.includes(id)) currentUser.purchased.push(id);
+
+      updateUserData();
+      
+      sendDiscordWebhook(webhooks.sales, {
+        embeds: [{
+          title: "🛒 Nova Venda Realizada!",
+          color: 38655,
+          fields: [
+            { name: "Cliente", value: currentUser.user, inline: true },
+            { name: "Plugin", value: name, inline: true },
+            { name: "Valor", value: price > 0 ? `R$ ${price.toFixed(2)}` : "GRÁTIS", inline: true }
+          ],
+          footer: { text: webhooks.footerText || "AquaPlugins • aquaplugins.com.br" },
+          timestamp: new Date().toISOString()
+        }]
+      });
+
+      alert(`Sucesso! O plugin "${name}" foi entregue diretamente na sua conta.`);
+      renderClientArea();
+    }
+
+    function addClientIp() {
+      if (!currentUser) return alert('Faça login primeiro!');
+      const ip = document.getElementById('ip-input-field').value.trim();
+      if (!ip) return alert('Digite um IP numérico válido!');
+      
+      if (!currentUser.ips) currentUser.ips = [];
+      if (currentUser.ips.length >= 2) return alert('Limite máximo de 2 IPs por conta atingido!');
+      if (currentUser.ips.includes(ip)) return alert('Este IP já está cadastrado.');
+
+      currentUser.ips.push(ip);
+      updateUserData();
+      document.getElementById('ip-input-field').value = '';
+      renderClientArea();
+    }
+
+    function removeClientIp(ip) {
+      currentUser.ips = currentUser.ips.filter(i => i !== ip);
+      updateUserData();
+      renderClientArea();
+    }
+
+    function saveClientAccountSettings() {
+      if (!currentUser) return alert('Faça login primeiro!');
+      const realName = document.getElementById('cfg-realname').value.trim();
+      const discord = document.getElementById('cfg-discord').value.trim();
+      const mcUser = document.getElementById('cfg-mcuser').value.trim();
+      const pass = document.getElementById('cfg-pass').value;
+
+      if (realName) currentUser.realName = realName;
+      if (discord) currentUser.discord = discord;
+      if (mcUser) currentUser.mcUser = mcUser;
+      if (pass && pass.length >= 4) currentUser.pass = pass;
+
+      updateUserData();
+      alert('Configurações da conta atualizadas com sucesso!');
+      renderClientArea();
+    }
+
+    function updateUserData() {
+      const uIdx = users.findIndex(u => u.user.toLowerCase() === currentUser.user.toLowerCase());
+      if (uIdx >= 0) users[uIdx] = currentUser;
+      localStorage.setItem('tsl_users', JSON.stringify(users));
+      localStorage.setItem('tsl_logged_user', JSON.stringify(currentUser));
+    }
+
+    function renderClientArea() {
+      if (!currentUser) {
+        document.getElementById('client-username-display').innerText = 'Visitante';
+        document.getElementById('client-total-spent').innerText = 'R$ 0,00';
+        document.getElementById('client-total-plugins').innerText = '0';
+        document.getElementById('client-role-badge').innerHTML = '';
+        document.getElementById('client-ip-list').innerHTML = '<span class="text-xs text-gray-400">Faça login.</span>';
+        document.getElementById('client-licenses-list').innerHTML = '<p class="text-sm text-gray-400">Faça login para ver seus ficheiros.</p>';
+        return;
+      }
+
+      document.getElementById('client-username-display').innerText = currentUser.user;
+      document.getElementById('cfg-realname').value = currentUser.realName || '';
+      document.getElementById('cfg-discord').value = currentUser.discord || '';
+      document.getElementById('cfg-mcuser').value = currentUser.mcUser || '';
+
+      let totalSpent = 0;
+      let ownedPlugins = [];
+      if (currentUser.allAccess) {
+        ownedPlugins = plugins;
+        totalSpent = plugins.reduce((acc, p) => acc + p.price, 0);
+      } else if (currentUser.purchased) {
+        ownedPlugins = plugins.filter(p => currentUser.purchased.includes(p.id));
+        totalSpent = ownedPlugins.reduce((acc, p) => acc + p.price, 0);
+      }
+
+      document.getElementById('client-total-spent').innerText = `R$ ${totalSpent.toFixed(2)}`;
+      document.getElementById('client-total-plugins').innerText = ownedPlugins.length;
+
+      let currentRank = null;
+      const sortedRanks = [...ranks].sort((a, b) => b.minSpent - a.minSpent);
+      for (let r of sortedRanks) {
+        if (totalSpent >= r.minSpent) { currentRank = r; break; }
+      }
+
+      const roleBadge = document.getElementById('client-role-badge');
+      if (currentRank) {
+        roleBadge.innerHTML = `<span class="px-3 py-1 bg-sky-100 text-sky-800 text-xs font-bold rounded-full"><i class="fa-solid fa-medal mr-1"></i> ${currentRank.name}</span>`;
+      } else {
+        roleBadge.innerHTML = `<span class="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded-full">Cliente Padrão</span>`;
+      }
+
+      const ipList = document.getElementById('client-ip-list');
+      if (currentUser.ips && currentUser.ips.length > 0) {
+        ipList.innerHTML = currentUser.ips.map(ip => `
+          <div class="bg-white border border-gray-200 px-3 py-1.5 rounded-xl text-xs font-mono text-cyan-700 flex items-center gap-2 shadow-xs">
+            ${ip} <button onclick="removeClientIp('${ip}')" class="text-red-500 hover:text-red-700 ml-1"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+        `).join('');
+      } else {
+        ipList.innerHTML = '<span class="text-xs text-gray-400">Nenhum IP cadastrado.</span>';
+      }
+
+      const licensesList = document.getElementById('client-licenses-list');
+      if (ownedPlugins.length > 0) {
+        licensesList.innerHTML = ownedPlugins.map(p => `
+          <div class="flex justify-between items-center bg-gray-50 p-4 rounded-2xl border border-gray-200">
+            <div>
+              <h4 class="font-bold text-gray-900">${p.name}</h4>
+              <p class="text-xs text-emerald-600 mt-0.5"><i class="fa-solid fa-check"></i> Ficheiro .JAR Próprio Pronto</p>
+            </div>
+            <button onclick="downloadPluginJar('${p.id}')" class="bg-sky-500 hover:bg-sky-600 text-white font-bold px-4 py-2 rounded-xl text-xs transition flex items-center gap-1.5 shadow-sm">
+              <i class="fa-solid fa-download"></i> Baixar ${p.jarFileName || 'Plugin.jar'}
+            </button>
+          </div>
+        `).join('');
+      } else {
+        licensesList.innerHTML = `<p class="text-sm text-gray-400">Nenhum plugin adquirido.</p>`;
+      }
+    }
+
+    async function downloadPluginJar(pluginId) {
+      if (!currentUser.ips || currentUser.ips.length === 0) {
+        alert("Atenção: Cadastre ao menos 1 IP no seu painel antes de baixar o arquivo .JAR!");
+        return;
+      }
+      const p = plugins.find(x => x.id === pluginId);
+      if (!p) return;
+
+      const filename = p.jarFileName || `${p.name}.jar`;
+      const jarBlob = await getJarFromDB(pluginId);
+
+      if (jarBlob) {
+        const url = window.URL.createObjectURL(jarBlob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        a.remove();
+      } else {
+        const blob = new Blob([`# AquaPlugins Binary Jar\n# Plugin: ${p.name}\n# User: ${currentUser.user}\n# IPs: ${currentUser.ips.join(', ')}`], { type: 'application/java-archive' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        a.remove();
+      }
+    }
+
+    function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
+    function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
+    function toggleAuthTab(tab) {
+      if (tab === 'login') {
+        document.getElementById('auth-form-login').classList.remove('hidden');
+        document.getElementById('auth-form-register').classList.add('hidden');
+        document.getElementById('tab-btn-login').className = "flex-1 py-2 font-bold text-sm border-b-2 border-sky-500 text-sky-500";
+        document.getElementById('tab-btn-register').className = "flex-1 py-2 font-bold text-sm border-b-2 border-transparent text-gray-400";
+      } else {
+        document.getElementById('auth-form-login').classList.add('hidden');
+        document.getElementById('auth-form-register').classList.remove('hidden');
+        document.getElementById('tab-btn-register').className = "flex-1 py-2 font-bold text-sm border-b-2 border-sky-500 text-sky-500";
+        document.getElementById('tab-btn-login').className = "flex-1 py-2 font-bold text-sm border-b-2 border-transparent text-gray-400";
+      }
+    }
+
+    function performLogin() {
+      const u = document.getElementById('login-user').value.trim();
+      const p = document.getElementById('login-pass').value;
+      const found = users.find(x => x.user.toLowerCase() === u.toLowerCase() && x.pass === p);
+      if (found) {
+        currentUser = found;
+        localStorage.setItem('tsl_logged_user', JSON.stringify(currentUser));
+        updateUserNav();
+        closeAuthModal();
+        alert('Login efetuado com sucesso!');
+      } else {
+        alert('Usuário ou senha inválidos!');
+      }
+    }
+
+    function performRegister() {
+      const u = document.getElementById('reg-user').value.trim();
+      const p = document.getElementById('reg-pass').value;
+      if (!u || p.length < 4) return alert('Insira um usuário válido e senha com pelo menos 4 caracteres!');
+      if (users.find(x => x.user.toLowerCase() === u.toLowerCase())) return alert('Este nome de usuário já está em uso.');
+
+      const newUser = { user: u, pass: p, realName: u, discord: '', mcUser: u, allAccess: false, purchased: [], ips: [] };
+      users.push(newUser);
+      localStorage.setItem('tsl_users', JSON.stringify(users));
+      currentUser = newUser;
+      localStorage.setItem('tsl_logged_user', JSON.stringify(currentUser));
+      updateUserNav();
+      closeAuthModal();
+      alert('Conta criada com sucesso!');
+    }
+
+    function logoutUser() {
+      currentUser = null;
+      localStorage.removeItem('tsl_logged_user');
+      updateUserNav();
+      switchView('store');
+    }
+
+    function updateUserNav() {
+      const area = document.getElementById('user-nav-area');
+      const adminContainer = document.getElementById('admin-btn-container');
+
+      if (currentUser) {
+        area.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="text-sm font-bold text-gray-800"><i class="fa-solid fa-user text-sky-500"></i> ${currentUser.user}</span>
+            <button onclick="logoutUser()" class="text-xs text-red-500 hover:text-red-700 font-bold">Sair</button>
+          </div>
+        `;
+        if (isAdmin(currentUser.user)) {
+          adminContainer.innerHTML = `
+            <button onclick="openAdminModal()" class="px-3 py-2 rounded-xl border border-gray-200 bg-white hover:border-sky-500 text-sm font-semibold text-gray-700 hover:text-sky-500 transition shadow-xs">
+              <i class="fa-solid fa-gear"></i>
+            </button>
+          `;
+        } else {
+          adminContainer.innerHTML = '';
+        }
+      } else {
+        area.innerHTML = `<button onclick="openAuthModal()" class="px-5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-sm transition shadow-sm">Entrar / Registrar</button>`;
+        adminContainer.innerHTML = '';
+      }
+    }
+
+    function openAdminModal() {
+      if (!currentUser || !isAdmin(currentUser.user)) return alert("Acesso negado.");
+      document.getElementById('admin-modal').classList.remove('hidden');
+      
+      document.getElementById('wh-sales').value = webhooks.sales || '';
+      document.getElementById('wh-plugins').value = webhooks.plugins || '';
+      document.getElementById('wh-updates').value = webhooks.updates || '';
+      document.getElementById('wh-footer-text').value = webhooks.footerText || 'AquaPlugins • aquaplugins.com.br';
+
+      document.getElementById('cfg-site-name').value = appearance.name || 'AquaPlugins';
+      document.getElementById('cfg-site-color').value = appearance.color || '#0096ff';
+      document.getElementById('cfg-discord-link').value = appearance.discordLink || 'https://discord.gg/';
+      document.getElementById('cfg-logo-url').value = appearance.logoUrl && !appearance.logoUrl.startsWith('data:') ? appearance.logoUrl : '';
+
+      document.getElementById('cfg-hero-title').value = homeContent.heroTitle;
+      document.getElementById('cfg-hero-desc').value = homeContent.heroDesc;
+      document.getElementById('cfg-hero-img-url').value = homeContent.heroImg && !homeContent.heroImg.startsWith('data:') ? homeContent.heroImg : '';
+      document.getElementById('cfg-about-title').value = homeContent.aboutTitle;
+      document.getElementById('cfg-about-desc').value = homeContent.aboutDesc;
+
+      renderAdminLists();
+    }
+
+    function closeAdminModal() { document.getElementById('admin-modal').classList.add('hidden'); }
+
+    function switchAdminTab(tab) {
+      ['plugins','webhooks','appearance','homecontent','admins','ranks','faqs','docs'].forEach(t => document.getElementById('admin-tab-' + t).classList.add('hidden'));
+      document.getElementById('admin-tab-' + tab).classList.remove('hidden');
+    }
+
+    function addAdminUser() {
+      const username = document.getElementById('new-admin-user').value.trim();
+      if (!username) return alert('Insira um nome de usuário!');
+      if (adminAccounts.map(a => a.toLowerCase()).includes(username.toLowerCase())) return alert('Esta conta já é admin!');
+
+      adminAccounts.push(username);
+      localStorage.setItem('tsl_admin_accounts', JSON.stringify(adminAccounts));
+      document.getElementById('new-admin-user').value = '';
+      renderAdminLists();
+      updateUserNav();
+      alert(`Conta "${username}" agora tem acesso ao painel admin!`);
+    }
+
+    function removeAdminUser(username) {
+      if (username.toLowerCase() === 'ytsljoao') return alert('A conta principal yTSLJOAO não pode ser removida!');
+      adminAccounts = adminAccounts.filter(a => a.toLowerCase() !== username.toLowerCase());
+      localStorage.setItem('tsl_admin_accounts', JSON.stringify(adminAccounts));
+      renderAdminLists();
+      updateUserNav();
+    }
+
+    function saveRank() {
+      const id = document.getElementById('rank-id').value.trim();
+      const name = document.getElementById('rank-name').value.trim();
+      const minSpent = parseFloat(document.getElementById('rank-min').value) || 0;
+
+      if (!id || !name) return alert('Preencha todos os campos!');
+      const idx = ranks.findIndex(r => r.id === id);
+      if (idx >= 0) ranks[idx] = { id, name, minSpent };
+      else ranks.push({ id, name, minSpent });
+
+      localStorage.setItem('tsl_ranks', JSON.stringify(ranks));
+      document.getElementById('rank-id').value = '';
+      document.getElementById('rank-name').value = '';
+      document.getElementById('rank-min').value = '';
+      renderAdminLists();
+      alert('Cargo salvo!');
+    }
+
+    async function savePlugin() {const id = document.getElementById('p-id').value || Date.now().toString();
+      const name = document.getElementById('p-name').value.trim();
+      const category = document.getElementById('p-category').value.trim() || 'Gestão';
+      const price = parseFloat(document.getElementById('p-price').value) || 0;
+      const type = document.getElementById('p-type').value;
+      const version = document.getElementById('p-version').value.trim() || '1.0.0';
+      const mcVersions = document.getElementById('p-mcversions').value.trim() || '1.8 - 1.21';
+      const desc = document.getElementById('p-desc').value.trim();
+      const overview = document.getElementById('p-overview').value.trim() || desc;
+      const updateNotes = document.getElementById('p-updatenotes').value.trim() || 'Melhorias gerais e correções de bugs.';
+      const docUrl = document.getElementById('p-docurl').value.trim() || 'https://aquaplugins.com.br';
+      const featured = document.getElementById('p-featured').checked;
+
+      if (!name) return alert('Informe o nome do plugin!');
+
+      const idx = plugins.findIndex(p => p.id === id);
+      const existing = idx >= 0 ? plugins[idx] : {};
+
+      const newPlugin = {
+        id, name, category, price, type, version, mcVersions, desc, overview, updateNotes, docUrl, featured,
+        jarFileName: uploadedJarData ? uploadedJarData.name : (existing.jarFileName || `${name}.jar`),
+        logoUrl: uploadedPluginLogo || existing.logoUrl || ''
+      };
+
+      if (uploadedJarData) await storeJarInDB(id, uploadedJarData);
+
+      const footerText = webhooks.footerText || 'AquaPlugins • aquaplugins.com.br';
+
+      // MENSAGEM ESTILO IMAGEM 1: NOVA ATUALIZAÇÃO
+      if (idx >= 0) {
+        plugins[idx] = newPlugin;
+        sendDiscordWebhook(webhooks.updates, {
+          embeds: [{
+            title: `📦 Nova Atualização • ${name}`,
+            description: desc,
+            color: 38655,
+            fields: [
+              { name: "\u200b", value: `✨ **${name}** agora em **${version}** | Explore este plugin na categoria **${category}** • **${price > 0 ? 'R$ ' + price.toFixed(2) : 'GRÁTIS'}**` },
+              { name: "Atualizações", value: updateNotes },
+              { name: "Observação", value: `Acesse nosso painel para baixar o arquivo .JAR atualizado.\n🔗 [Documentação do Plugin](${docUrl})` }
+            ],
+            thumbnail: newPlugin.logoUrl ? { url: newPlugin.logoUrl } : null,
+            footer: { text: footerText },
+            timestamp: new Date().toISOString()
+          }]
+        });
+      } 
+      // MENSAGEM ESTILO IMAGEM 2: NOVO PLUGIN
+      else {
+        plugins.push(newPlugin);
+        sendDiscordWebhook(webhooks.plugins, {
+          embeds: [{
+            title: `⚒️ Novo Plugin • ${name}`,
+            description: desc,
+            color: 38655,
+            fields: [
+              { name: "\u200b", value: `🔥 **Novo lançamento!** • **${name}** • **${category}** • **${price > 0 ? 'R$ ' + price.toFixed(2) : 'GRÁTIS'}**` },
+              { name: "Visão Geral", value: overview },
+              { name: "Versões do MC", value: mcVersions },
+              { name: "Documentação", value: `Acesse a documentação detalhada do plugin:\n🔗 [Clique para abrir](${docUrl})` }
+            ],
+            image: newPlugin.logoUrl ? { url: newPlugin.logoUrl } : null,
+            thumbnail: newPlugin.logoUrl ? { url: newPlugin.logoUrl } : null,
+            footer: { text: footerText },
+            timestamp: new Date().toISOString()
+          }]
+        });
+      }
+
+      localStorage.setItem('tsl_plugins', JSON.stringify(plugins));
+      uploadedJarData = null;
+      uploadedPluginLogo = null;
+      document.getElementById('p-file-input').value = '';
+      document.getElementById('p-logo-input').value = '';
+      document.getElementById('p-file-status').innerText = 'Nenhum ficheiro jar carregado.';
+
+      renderPlugins();
+      renderAdminLists();
+      alert(`Plugin "${name}" salvo e Embed enviado com sucesso!`);
+    }
+
+    function saveFaq() {
+      const id = document.getElementById('faq-id').value || Date.now().toString();
+      const q = document.getElementById('faq-q').value;
+      const a = document.getElementById('faq-a').value;
+
+      if (!q || !a) return alert('Preencha tudo!');
+      const idx = faqs.findIndex(f => f.id === id);
+      if (idx >= 0) faqs[idx] = { id, q, a };
+      else faqs.push({ id, q, a });
+
+      localStorage.setItem('tsl_faqs', JSON.stringify(faqs));
+      renderFaqs();
+      renderAdminLists();
+      document.getElementById('faq-id').value = '';
+      document.getElementById('faq-q').value = '';
+      document.getElementById('faq-a').value = '';
+    }
+
+    function saveDoc() {
+      const id = document.getElementById('doc-id').value || Date.now().toString();
+      const title = document.getElementById('doc-input-title').value;
+      const content = document.getElementById('doc-input-content').value;
+
+      if (!title || !content) return alert('Preencha todos os campos!');
+      if (!window.docsList) window.docsList = docs;
+      window.docsList.push({ id, title, content });
+      localStorage.setItem('tsl_docs', JSON.stringify(window.docsList));
+      alert('Documentação salva!');
+      renderAdminLists();
+    }
+
+    function renderAdminLists() {
+      document.getElementById('admin-plugin-list').innerHTML = plugins.map(p => `
+        <div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl text-sm border border-gray-200">
+          <span class="text-gray-800 flex items-center gap-2">
+            ${p.logoUrl ? `<img src="${p.logoUrl}" class="w-6 h-6 rounded object-cover">` : '<i class="fa-solid fa-droplet text-sky-500"></i>'}
+            <strong>${p.name}</strong> <span class="text-xs text-gray-400">(${p.category || 'Geral'})</span>
+          </span>
+          <button onclick="plugins=plugins.filter(x=>x.id!='${p.id}');localStorage.setItem('tsl_plugins',JSON.stringify(plugins));renderPlugins();renderAdminLists();" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+        </div>
+      `).join('');
+
+      document.getElementById('admin-users-list').innerHTML = adminAccounts.map(acc => `
+        <div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl text-sm border border-gray-200">
+          <span class="text-gray-800 font-bold"><i class="fa-solid fa-shield-halved text-amber-500 mr-2"></i> ${acc}</span>
+          ${acc.toLowerCase() !== 'ytsljoao' ? `<button onclick="removeAdminUser('${acc}')" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>` : '<span class="text-xs text-gray-400">Principal</span>'}
+        </div>
+      `).join('');
+
+      document.getElementById('admin-ranks-list').innerHTML = ranks.map(r => `
+        <div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl text-sm border border-gray-200">
+          <span class="text-gray-800"><strong>${r.name}</strong> — Mínimo: <span class="text-sky-500">R$ ${r.minSpent.toFixed(2)}</span></span>
+          <button onclick="ranks=ranks.filter(x=>x.id!='${r.id}');localStorage.setItem('tsl_ranks',JSON.stringify(ranks));renderAdminLists();" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+        </div>
+      `).join('');
+
+      document.getElementById('admin-faq-list').innerHTML = faqs.map(f => `
+        <div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl text-sm border border-gray-200">
+          <span class="text-gray-800"><strong>${f.q}</strong></span>
+          <button onclick="faqs=faqs.filter(x=>x.id!='${f.id}');localStorage.setItem('tsl_faqs',JSON.stringify(faqs));renderFaqs();renderAdminLists();" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash"></i></button>
+        </div>
+      `).join('');
+    }
+
+    function renderDocs() {
+      const activeDocs = JSON.parse(localStorage.getItem('tsl_docs')) || docs;
+      document.getElementById('docs-sidebar-list').innerHTML = activeDocs.map(d => `
+        <li><button onclick="document.getElementById('doc-title').innerText='${d.title}';document.getElementById('doc-body').innerText='${d.content}';" class="w-full text-left px-3 py-2 rounded-xl hover:bg-gray-100 text-gray-600 font-medium">${d.title}</button></li>
+      `).join('');
+      if (activeDocs.length > 0) {
+        document.getElementById('doc-title').innerText = activeDocs[0].title;
+        document.getElementById('doc-body').innerText = activeDocs[0].content;
+      }
+    }
+  </script>
+</body>
+</html>
